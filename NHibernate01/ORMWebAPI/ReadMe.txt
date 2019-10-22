@@ -21,6 +21,7 @@ References:
 		- OnepPlannerMapping creates a dictionary between class and table, collection
 		and properties from SessionFactory and provides support to map all OnePlanner
 		classes and collections to tables
+	[?] There is some concept of tracking and batching configs
 # Another approach could be to not use xml files and use this instead:
 	NHibernate.Mapping.Attributes: With NHibernate.Mapping.Attributes, you can use .NET attributes to decorate your entities and these attributes will be used to generate the mapping information
 	https://github.com/nhibernate/NHibernate.Mapping.Attributes
@@ -50,3 +51,16 @@ References:
 	8. Option to generate NHibernate or MS validators
 
 =============
+Start here:
+https://www.tutorialspoint.com/nhibernate/index.htm
+
+---------
+Things that we will have to deal with
+	- Object-Object mappings - Unidirectional/bi-directional
+	- Inheritance
+---------
+Add Project -> Class Library (.NET Core)
+
+Nuget Package Manager Console
+PM > install-package NHibernate
+
