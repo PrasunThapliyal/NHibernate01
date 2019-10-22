@@ -66,7 +66,14 @@ Visual Studio -> View -> SQL Server Object Explorer
 	-> SQL Server -> (localdb)\MSSQLLocalDB -> Databases
 	-> Right Click -> Add new database -> NHibernate01 (Path = C:\GIT\NHibernate01\NHibernate01\ORM_NHibernate\)
 	->
-	-> Tables -> Add new table -> Student (Use designer window to create table fields)
+	-> Tables -> Add new table -> Student (Use designer window to create table fields) .. with SQL like this:
+	CREATE TABLE [dbo].[Student] (
+    [Id]        INT            IDENTITY (1, 1) NOT NULL,
+    [Firstname] NVARCHAR (MAX) NULL,
+    [Lastname]  NVARCHAR (MAX) NULL,
+    PRIMARY KEY CLUSTERED ([Id] ASC)
+	);
+
 Nuget Package Manager Console
 PM > install-package NHibernate
 
@@ -75,4 +82,23 @@ Add new class to represent DBSession (NHibernate session)
 Note on MDF file:
 	Even though I have specified the mdf/ldf files to be created in this project folder, they are gitignored
 
+// Note: Troubleshooting
+// At some point here, I was getting error which got resolved due to this:
+// https://stackoverflow.com/questions/35444487/how-to-use-sqlclient-in-asp-net-core
+//            Instead of referencing System.Data and System.Data.SqlClient you need to grab from Nuget:
+//            System.Data.Common and System.Data.SqlClient
+
+// Troubleshooting:
+// Make sure that all the fields in C# class and hbm.xml file match case-by-case
+
+// Troubleshooting:
+// In your DB, the Id column should be defined like so
+// [Id]        INT            IDENTITY (1, 1) NOT NULL
+// In the hbm file, it should be
+// <generator class = "identity"/>
+
+
+
+Able to Save record to Student
+-----------
 

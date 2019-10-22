@@ -5,7 +5,7 @@
 
   <class name = "Student">
     <id name = "Id">
-      <generator class = "native"/>
+      <generator class = "identity"/>
     </id>
 
     <property name = "Lastname"/>

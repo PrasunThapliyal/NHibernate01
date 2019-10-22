@@ -1,0 +1,59 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using ORM_NHibernate;
+
+namespace ORMWebAPI.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class StudentController : ControllerBase
+    {
+        // GET: api/Student
+        [HttpGet]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
+
+        // GET: api/Student/5
+        [HttpGet("{id}", Name = "Get")]
+        public string Get(int id)
+        {
+            return "value";
+        }
+
+        // POST: api/Student
+        [HttpPost]
+        public void Post([FromBody] Student student)
+        {
+            DBSession dBSession = new DBSession();
+            var sefact = dBSession.GetSessionFactory();
+
+            using (var session = sefact.OpenSession())
+            {
+                using (var tx = session.BeginTransaction())
+                {
+                    session.Save(student);
+                    tx.Commit();
+                }
+            }
+        }
+    
+
+        // PUT: api/Student/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE: api/ApiWithActions/5
+        [HttpDelete("{id}")]
+        public void Delete(int id)
+        {
+        }
+    }
+}
