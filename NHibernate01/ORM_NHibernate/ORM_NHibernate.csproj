@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="HBM\Student.hbm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="HBM\Student.hbm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="NHibernate" Version="5.2.6" />
   </ItemGroup>
 

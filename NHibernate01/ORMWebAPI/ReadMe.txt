@@ -60,7 +60,19 @@ Things that we will have to deal with
 	- Inheritance
 ---------
 Add Project -> Class Library (.NET Core)
+- Create new Class Student
 
+Visual Studio -> View -> SQL Server Object Explorer
+	-> SQL Server -> (localdb)\MSSQLLocalDB -> Databases
+	-> Right Click -> Add new database -> NHibernate01 (Path = C:\GIT\NHibernate01\NHibernate01\ORM_NHibernate\)
+	->
+	-> Tables -> Add new table -> Student (Use designer window to create table fields)
 Nuget Package Manager Console
 PM > install-package NHibernate
+
+Add new class to represent DBSession (NHibernate session)
+
+Note on MDF file:
+	Even though I have specified the mdf/ldf files to be created in this project folder, they are gitignored
+
 
