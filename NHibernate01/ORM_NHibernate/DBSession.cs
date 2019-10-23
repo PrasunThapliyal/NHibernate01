@@ -36,6 +36,7 @@ namespace ORM_NHibernate
                 var assembly = Assembly.GetExecutingAssembly();
                 var assemblyName = assembly.GetName().Name;
                 var manifestResourceName = "Configuration.hibernate.cfg.xml";
+
                 cfg.Configure(assembly, $"{assemblyName}.{manifestResourceName}");
 
                 cfg.SetInterceptor(new AuditInterceptor());

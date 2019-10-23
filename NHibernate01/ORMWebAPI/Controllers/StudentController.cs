@@ -1,6 +1,7 @@
 ﻿
 namespace ORMWebAPI.Controllers
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Mvc;
     using ORM_NHibernate;
@@ -11,21 +12,22 @@ namespace ORMWebAPI.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
+        private readonly NHibernate.ISession _session;
+
+        public StudentController(NHibernate.ISession session)
+        {
+            _session = session ?? throw new ArgumentNullException(nameof(session));
+        }
+
         // GET: api/Student
         [HttpGet]
         public IEnumerable<Student> Get()
         {
-            DBSession dBSession = new DBSession();
-            var sefact = dBSession.GetSessionFactory();
-
-            using (var session = sefact.OpenSession())
+            using (var tx = _session.BeginTransaction())
             {
-                using (var tx = session.BeginTransaction())
-                {
-                    var students = session.CreateCriteria<Student>().List<Student>();
-                    tx.Commit();
-                    return students;
-                }
+                var students = _session.CreateCriteria<Student>().List<Student>();
+                tx.Commit();
+                return students;
             }
         }
 
@@ -33,17 +35,11 @@ namespace ORMWebAPI.Controllers
         [HttpGet("{id}", Name = "Get")]
         public Student Get(int id)
         {
-            DBSession dBSession = new DBSession();
-            var sefact = dBSession.GetSessionFactory();
-
-            using (var session = sefact.OpenSession())
+            using (var tx = _session.BeginTransaction())
             {
-                using (var tx = session.BeginTransaction())
-                {
-                    var student = session.Get<Student>(id);
-                    tx.Commit();
-                    return student;
-                }
+                var student = _session.Get<Student>(id);
+                tx.Commit();
+                return student;
             }
         }
 
@@ -51,38 +47,26 @@ namespace ORMWebAPI.Controllers
         [HttpPost]
         public void Post([FromBody] Student student)
         {
-            DBSession dBSession = new DBSession();
-            var sefact = dBSession.GetSessionFactory();
-
-            using (var session = sefact.OpenSession())
+            using (var tx = _session.BeginTransaction())
             {
-                using (var tx = session.BeginTransaction())
-                {
-                    session.Save(student);
-                    tx.Commit();
-                }
+                _session.Save(student);
+                tx.Commit();
             }
         }
-    
+
 
         // PUT: api/Student/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Student student)
         {
-            DBSession dBSession = new DBSession();
-            var sefact = dBSession.GetSessionFactory();
-
-            using (var session = sefact.OpenSession())
+            using (var tx = _session.BeginTransaction())
             {
-                using (var tx = session.BeginTransaction())
-                {
-                    var studentStorage = session.Get<Student>(id);
+                var studentStorage = _session.Get<Student>(id);
 
-                    studentStorage.Firstname = student.Firstname;
-                    studentStorage.Lastname = student.Lastname;
-                    session.Update(studentStorage);
-                    tx.Commit();
-                }
+                studentStorage.Firstname = student.Firstname;
+                studentStorage.Lastname = student.Lastname;
+                _session.Update(studentStorage);
+                tx.Commit();
             }
         }
 
@@ -90,18 +74,13 @@ namespace ORMWebAPI.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-            DBSession dBSession = new DBSession();
-            var sefact = dBSession.GetSessionFactory();
-
-            using (var session = sefact.OpenSession())
+            using (var tx = _session.BeginTransaction())
             {
-                using (var tx = session.BeginTransaction())
-                {
-                    var student = session.Get<Student>(id);
-                    session.Delete(student);
-                    tx.Commit();
-                }
+                var student = _session.Get<Student>(id);
+                _session.Delete(student);
+                tx.Commit();
             }
         }
+
     }
 }

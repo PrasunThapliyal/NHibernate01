@@ -16,6 +16,7 @@
     
     <property name="show_sql">true</property>
     <property name="format_sql">true</property>
+    <property name="use_sql_comments">true</property>
     <property name="adonet.batch_size">10</property>
     <mapping assembly="ORM_NHibernate" />
   </session-factory>
