@@ -104,3 +104,20 @@ This is a convention used by NHibernate to automatically recognize the file as a
 Able to Save record to Student
 -----------
 
+[#] How to show the SQL queries that nHibernate executes:
+[Ans] Add this to the hibernate.cfg.xml file
+    <property name="show_sql">true</property>
+    <property name="format_sql">true</property>
+
+This outputs the SQL query to the console, eg
+NHibernate:
+    SELECT
+        this_.Id as id1_0_0_,
+        this_.Lastname as lastname2_0_0_,
+        this_.Firstname as firstname3_0_0_
+    FROM
+        Student this_
+
+Another answer here: https://stackoverflow.com/questions/129133/how-do-i-view-the-sql-that-is-generated-by-nhibernate
+NHibernate.EmptyInterceptor
+------------

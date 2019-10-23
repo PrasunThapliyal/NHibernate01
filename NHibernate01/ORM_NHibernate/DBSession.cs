@@ -5,6 +5,7 @@ namespace ORM_NHibernate
     using NHibernate.Cfg;
     using NHibernate.Dialect;
     using NHibernate.Driver;
+    using ORM_NHibernate.Infrastructure;
     using System.Reflection;
 
     public class DBSession
@@ -36,6 +37,8 @@ namespace ORM_NHibernate
                 var assemblyName = assembly.GetName().Name;
                 var manifestResourceName = "Configuration.hibernate.cfg.xml";
                 cfg.Configure(assembly, $"{assemblyName}.{manifestResourceName}");
+
+                cfg.SetInterceptor(new AuditInterceptor());
             }
 
             // Note: Troubleshooting
