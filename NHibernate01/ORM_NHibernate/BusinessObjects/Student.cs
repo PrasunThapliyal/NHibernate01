@@ -1,5 +1,5 @@
 ﻿
-namespace ORM_NHibernate
+namespace ORM_NHibernate.BusinessObjects
 {
     using System;
 
