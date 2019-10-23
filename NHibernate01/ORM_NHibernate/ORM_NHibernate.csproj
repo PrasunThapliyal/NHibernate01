@@ -11,7 +11,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Configuration\hibernate.cfg.xml" />
     <None Remove="HBM\Student.hbm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Configuration\hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

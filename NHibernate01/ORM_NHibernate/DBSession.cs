@@ -14,15 +14,29 @@ namespace ORM_NHibernate
             // TODO: It should be possible to define this config in some XML file as well
             // Google to find out how
 
-            var cfg = new Configuration();
-            cfg.DataBaseIntegration(x =>
+            var cfg = new NHibernate.Cfg.Configuration();
             {
-                x.ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=NHibernate01;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-                x.Driver<SqlClientDriver>();
-                x.Dialect<MsSqlCeDialect>();
-            });
+                // This way of configuring works, but I want to try out the xml config file
+                //cfg.DataBaseIntegration(x =>
+                //{
+                //    x.ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=NHibernate01;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+                //    x.Driver<SqlClientDriver>();
+                //    x.Dialect<MsSqlCeDialect>();
+                //});
 
-            cfg.AddAssembly(Assembly.GetExecutingAssembly());
+                //cfg.AddAssembly(Assembly.GetExecutingAssembly());
+            }
+            {
+                // Use xml for configuration
+                // Add hibernate.cfg.xml as Embedded Resource in a folder named Configuration
+                // use cfg.Configure(assembly, resourceName) version
+                // The other version cfg.Configure(resourceName) always searches for the file in startup project
+
+                var assembly = Assembly.GetExecutingAssembly();
+                var assemblyName = assembly.GetName().Name;
+                var manifestResourceName = "Configuration.hibernate.cfg.xml";
+                cfg.Configure(assembly, $"{assemblyName}.{manifestResourceName}");
+            }
 
             // Note: Troubleshooting
             // At some point here, I was getting error which got resolved due to this:

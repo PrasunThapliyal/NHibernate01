@@ -97,6 +97,8 @@ Note on MDF file:
 // In the hbm file, it should be
 // <generator class = "identity"/>
 
+PS: Please note the "hbm" part of the file name. 
+This is a convention used by NHibernate to automatically recognize the file as a mapping file.
 
 
 Able to Save record to Student
