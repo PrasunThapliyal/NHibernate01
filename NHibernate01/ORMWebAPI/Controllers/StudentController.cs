@@ -3,6 +3,7 @@ namespace ORMWebAPI.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Microsoft.AspNetCore.Mvc;
     using ORM_NHibernate;
     using ORM_NHibernate.BusinessObjects;
@@ -23,12 +24,43 @@ namespace ORMWebAPI.Controllers
         [HttpGet]
         public IEnumerable<Student> Get()
         {
+            // This works, btw
+            //using (var tx = _session.BeginTransaction())
+            //{
+            //    var students = _session.CreateCriteria<Student>().List<Student>();
+            //    tx.Commit();
+            //    return students;
+            //}
+
+            // This is another way
+            // Notable: The .Where is not applied at client side .. the SQL query itself has .Where applied .. cool !!
+            //
+            // NHibernate:
+            // /* [expression] */select
+            //    student0_.Id as id1_0_,
+            //    student0_.Lastname as lastname2_0_,
+            //    student0_.Firstname as firstname3_0_
+            //from
+            //    Student student0_
+            //where
+            //    student0_.Firstname = @p0;
+            //        @p0 = 'Prasun'[Type: String(4000:0:0)]
+            //
             using (var tx = _session.BeginTransaction())
             {
-                var students = _session.CreateCriteria<Student>().List<Student>();
+                var students = _session
+                    .Query<Student>()
+                    .Where(s => s.Firstname == "Prasun")
+                    .ToList();
+                foreach (var student in students)
+                {
+                    Console.Out.WriteLine("Student: " + student.Firstname);
+                }
                 tx.Commit();
+
                 return students;
             }
+
         }
 
         // GET: api/Student/5
