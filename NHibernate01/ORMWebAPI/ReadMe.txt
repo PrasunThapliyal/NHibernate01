@@ -5,6 +5,9 @@ Project Created using Visual Studio 2019
 	- No Authentication, No HTTPS, No Docker Support
 	- Create
 
+DB
+	- Using (localdb)\MSSQLLocalDB
+
 Objective
 	- Try nHibernate
 	- Mimic 1P to understand how 1P uses nHibernate
