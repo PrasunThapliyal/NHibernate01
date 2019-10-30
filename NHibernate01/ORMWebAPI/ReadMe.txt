@@ -124,3 +124,25 @@ NHibernate:
 Another answer here: https://stackoverflow.com/questions/129133/how-do-i-view-the-sql-that-is-generated-by-nhibernate
 NHibernate.EmptyInterceptor
 ------------
+30 Oct 2019
+Try with MySQL
+ - Add nuget MySql.Data
+ - Create a new Database named 'nhibernate' in MySql workbench, and create a table named 'student'
+ - By default, the database/table/column names need to be in small case
+ - Some modifications required in cfg and hbm file
+ - id column was giving some problem. I'll try setting its class to 'hilo' to mimin 1P, and that requires me to create a new table in MySql
+ - CREATE TABLE `hibernate_unique_key` (
+  `next_hi` int(11) DEFAULT NULL
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+ - Which I copied as query from 1P's table
+ .. let's see
+ - Troubleshooting:
+ [#]: NHibernate.Id.IdentifierGenerationException: 'could not read a hi value - you need to populate the table: hibernate_unique_key'
+	Ans: From stackoverflow
+	NHibernate expects to find a value that stores the current hi value in that table, ie it first runs something like:
+
+	current_hi = [SELECT max(next_hi) FROM hibernate_unique_key].
+	So all you need to do is seed that table with an initial number, ie:
+
+	INSERT INTO hibernate_unique_key(next_hi) VALUES (0)
+ - And cool .. we are able to insert/get using Postman
