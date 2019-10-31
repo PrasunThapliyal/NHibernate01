@@ -30,7 +30,9 @@ namespace ORMWebAPI
             // NHibernate session registration
             // Note that we are registring SessionFactory as a Singleton
             // but session is registered per request
-            var nHibernateSessionFactory = new DBSession().GetSessionFactory();
+            var nHibernateConfiguration = new DBSession().GetConfiguration();
+            var nHibernateSessionFactory = new DBSession().GetSessionFactory(nHibernateConfiguration);
+            services.AddSingleton(nHibernateConfiguration);
             services.AddSingleton(nHibernateSessionFactory);
             services.AddScoped(factory => nHibernateSessionFactory.OpenSession());
         }

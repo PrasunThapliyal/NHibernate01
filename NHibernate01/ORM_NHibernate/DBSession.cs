@@ -10,7 +10,7 @@ namespace ORM_NHibernate
 
     public class DBSession
     {
-        public ISessionFactory GetSessionFactory()
+        public NHibernate.Cfg.Configuration GetConfiguration()
         {
             // TODO: It should be possible to define this config in some XML file as well
             // Google to find out how
@@ -42,6 +42,11 @@ namespace ORM_NHibernate
                 cfg.SetInterceptor(new AuditInterceptor());
             }
 
+            return cfg;
+        }
+
+        public ISessionFactory GetSessionFactory(NHibernate.Cfg.Configuration cfg)
+        {
             // Note: Troubleshooting
             // At some point here, I was getting error which got resolved due to this:
             // https://stackoverflow.com/questions/35444487/how-to-use-sqlclient-in-asp-net-core

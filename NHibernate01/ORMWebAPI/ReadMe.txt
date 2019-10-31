@@ -127,7 +127,7 @@ NHibernate.EmptyInterceptor
 30 Oct 2019
 Try with MySQL
  - Add nuget MySql.Data
- - Create a new Database named 'nhibernate' in MySql workbench, and create a table named 'student'
+ - Create a new Database named 'nhibernate01' in MySql workbench, and create a table named 'student'
  - By default, the database/table/column names need to be in small case
  - Some modifications required in cfg and hbm file
  - id column was giving some problem. I'll try setting its class to 'hilo' to mimin 1P, and that requires me to create a new table in MySql
