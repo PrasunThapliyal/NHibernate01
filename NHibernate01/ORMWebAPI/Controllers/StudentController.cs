@@ -50,7 +50,7 @@ namespace ORMWebAPI.Controllers
             {
                 var students = _session
                     .Query<Student>()
-                    .Where(s => s.Firstname == "Prasun")
+                    //.Where(s => s.Firstname == "Prasun")
                     .ToList();
                 foreach (var student in students)
                 {
