@@ -35,6 +35,7 @@ namespace ORMWebAPI.Controllers
             // This is another way
             // Notable: The .Where is not applied at client side .. the SQL query itself has .Where applied .. cool !!
             //
+            // This is the localdb dialect
             // NHibernate:
             // /* [expression] */select
             //    student0_.Id as id1_0_,
@@ -46,6 +47,19 @@ namespace ORMWebAPI.Controllers
             //    student0_.Firstname = @p0;
             //        @p0 = 'Prasun'[Type: String(4000:0:0)]
             //
+            // --
+            // MYSQL Dialect
+            // NHibernate:
+            //        select
+            //    student0_.id as id1_0_,
+            //    student0_.firstname as firstname2_0_,
+            //    student0_.lastname as lastname3_0_
+            //from
+            //    student student0_
+            //where
+            //    student0_.firstname =? p0;
+            //?p0 = 'Prasun'[Type: String(6:0:0)]
+
             using (var tx = _session.BeginTransaction())
             {
                 var students = _session
