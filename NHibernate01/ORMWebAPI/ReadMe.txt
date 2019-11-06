@@ -146,3 +146,13 @@ Try with MySQL
 
 	INSERT INTO hibernate_unique_key(next_hi) VALUES (0)
  - And cool .. we are able to insert/get using Postman
+-------------
+31 Oct 2019
+Troubleshooting
+(#) Column names which are SQL kywords
+	- In 1P, there are certain tables with column names that are SQL keywords, and the insert query that nHibernate issues fails.
+	Now, we could go about and rename all those columns, but you could add this setting to hibernate.cfg.xml
+	<property name="hbm2ddl.keywords">auto-quote</property>
+	What it would do is, instead of writing rank as column name, nH would write `rank` in the SQL query, and that is acceptable to SQL.
+	One caveat though, it probably works only if we have the mappings defined as .hbm.xml files (doesn't work with Fluent NH)
+	Anyways, we are using .hbm.xml files only, so this works for us
