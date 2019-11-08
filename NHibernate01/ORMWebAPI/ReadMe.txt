@@ -156,3 +156,13 @@ Troubleshooting
 	What it would do is, instead of writing rank as column name, nH would write `rank` in the SQL query, and that is acceptable to SQL.
 	One caveat though, it probably works only if we have the mappings defined as .hbm.xml files (doesn't work with Fluent NH)
 	Anyways, we are using .hbm.xml files only, so this works for us
+	(* Note *) Oh .. for some reason, I have to rename rank to sncRank .. for other column names it works, but not for rank
+
+-------------
+08 Nov 2019
+(#) Try saving 1P network
+	Added 1P Backend and other dependencies
+	session.Save is not working yet because OchTP UPDATE is getting called before an insert has been called
+	Kai wants me to research around this code: https://bitbucket.ciena.com/projects/ONEP/repos/oneplanner/browse/OnePlanner.Commands/CommandsComplex/UpdateTableOidCommand.cs#78
+	It inserts OIDs for slave entities (new terminology - slave entity)
+	I'll create a commit at this point. Will have to take 1P's classes for saving

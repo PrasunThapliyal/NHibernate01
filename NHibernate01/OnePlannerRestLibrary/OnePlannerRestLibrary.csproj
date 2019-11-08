@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="..\common.props" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OnePlannerBackend" Version="$(OnepBackendVersion)" />
+    <PackageReference Include="Ciena.BluePlanet.HttpUtils" Version="7.0.1" />
+  </ItemGroup>
+  
+</Project>

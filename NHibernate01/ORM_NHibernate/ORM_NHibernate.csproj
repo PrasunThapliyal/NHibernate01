@@ -1,5 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="..\common.props" />
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
@@ -9,7 +11,7 @@
     <PackageReference Include="NHibernate" Version="5.2.6" />
     <PackageReference Include="System.Data.Common" Version="4.3.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
-    <PackageReference Include="OnePlannerBackend" Version="0.0.16-rc11-core-" />
+    <PackageReference Include="OnePlannerBackend" Version="$(OnepBackendVersion)" />
   </ItemGroup>
 
   <ItemGroup>
