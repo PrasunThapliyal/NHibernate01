@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="OnePlannerBackend" Version="$(OnepBackendVersion)" />
-    <PackageReference Include="Ciena.BluePlanet.HttpUtils" Version="7.0.1" />
+    <PackageReference Include="Ciena.BluePlanet.HttpUtils" Version="$(BpDotnetVersion)" />
   </ItemGroup>
   
 </Project>

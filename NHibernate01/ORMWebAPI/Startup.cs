@@ -1,31 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Ciena.BluePlanet.OnePlannerRestLibrary;
-using Ciena.BluePlanet.TopologyPlanningService.Utilities;
-using CommonServiceLocator;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Practices.Prism.Events;
-using OnePlanner.Commands;
-using OnePlanner.CommonCS.Commands;
-using OnePlanner.CommonCS.DummyWrappers.DbWrapper;
-using OnePlanner.CommonCS.Logging;
-using OnePlanner.DataAbstractionLayer.DbWrapperImplementations;
-using OnePlanner.DBInterface.DBInterface;
-using OnePlanner.OrmNhib;
-using ORM_NHibernate;
-
+﻿
 namespace ORMWebAPI
 {
+    using System;
+    using Ciena.BluePlanet.OnePlannerRestLibrary;
+    using Ciena.BluePlanet.TopologyPlanningService.Utilities;
+    using CommonServiceLocator;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Microsoft.Practices.Prism.Events;
+    using OnePlanner.CommonCS.Commands;
+    using OnePlanner.CommonCS.DummyWrappers.DbWrapper;
+    using OnePlanner.CommonCS.Logging;
+    using OnePlanner.DBInterface.DBInterface;
+
     public class Startup
     {
         private readonly ILogger _logger;
@@ -55,20 +48,8 @@ namespace ORMWebAPI
             services.AddSingleton<IEventAggregatorFactory, EventAggregatorFactory>();
             services.AddScoped<IEventAggregator, EventAggregator>();
             services.AddScoped<IUndoManager, UndoManager>();
-            //ServiceLocator.SetLocatorProvider(() => new ServiceProviderServiceLocator(services.BuildServiceProvider()));
 
             PopulateContainer(services);
-
-
-
-            // NHibernate session registration
-            // Note that we are registring SessionFactory as a Singleton
-            // but session is registered per request
-            //var nHibernateConfiguration = new DBSession().GetConfiguration();
-            //var nHibernateSessionFactory = new DBSession().GetSessionFactory(nHibernateConfiguration);
-            //services.AddSingleton(nHibernateConfiguration);
-            //services.AddSingleton(nHibernateSessionFactory);
-            //services.AddScoped(factory => nHibernateSessionFactory.OpenSession());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -84,9 +65,6 @@ namespace ORMWebAPI
             app.UseAuthorization();
 
             SetServiceLocator(app);
-
-            
-            
 
             app.UseEndpoints(endpoints =>
             {

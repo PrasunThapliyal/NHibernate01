@@ -14,15 +14,18 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="MySql.Data" Version="8.0.18" />
+    <PackageReference Include="NHibernate" Version="5.2.6" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="OnePlannerBackend" Version="$(OnepBackendVersion)" />
-    <PackageReference Include="Ciena.BluePlanet.Logging" Version="7.0.1" />
-    <PackageReference Include="Ciena.BluePlanet.BpWeb" Version="7.0.1" />
+    <PackageReference Include="Ciena.BluePlanet.Logging" Version="$(BpDotnetVersion)" />
+    <PackageReference Include="Ciena.BluePlanet.BpWeb" Version="$(BpDotnetVersion)" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\OnePlannerRestLibrary\OnePlannerRestLibrary.csproj" />
-    <ProjectReference Include="..\ORM_NHibernate\ORM_NHibernate.csproj" />
   </ItemGroup>
 
 </Project>
