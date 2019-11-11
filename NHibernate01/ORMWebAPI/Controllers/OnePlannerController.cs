@@ -10,7 +10,10 @@ using Microsoft.Practices.Prism.Events;
 using OnePCommon;
 using OnePlanner.Commands;
 using OnePlanner.CommonCS.Commands;
+using OnePlanner.CommonCS.DummyWrappers.DbWrapper;
 using OnePlanner.CommonCS.Logging;
+using OnePlanner.DataAbstractionLayer.DbWrapperImplementations;
+using OnePlanner.OrmNhib;
 using OnePlanner.OrmNhib.BusinessObjects;
 
 namespace ORMWebAPI.Controllers
@@ -69,17 +72,33 @@ namespace ORMWebAPI.Controllers
         /// <param name="file"></param>
         /// <returns></returns>
         [HttpPost("submitNetwork")]
-        public async Task<IActionResult> SubmitNetwork(IFormFile file, [FromServices] NHibernate.ISession nHibernateSession = null)
+        public async Task<IActionResult> SubmitNetwork(
+            IFormFile file
+            //, 
+            //[FromServices] NHibernate.ISession nHibernateSession = null,
+            //[FromServices] OnePlannerORM orm,
+            //[FromServices] DatabaseCommands databaseCommands
+            )
         {
             if (file is null)
             {
                 throw new ArgumentNullException(nameof(file));
             }
 
-            if (nHibernateSession is null)
-            {
-                throw new ArgumentNullException(nameof(nHibernateSession));
-            }
+            //if (orm is null)
+            //{
+            //    throw new ArgumentNullException(nameof(orm));
+            //}
+
+            //if (databaseCommands is null)
+            //{
+            //    throw new ArgumentNullException(nameof(databaseCommands));
+            //}
+
+            //if (nHibernateSession is null)
+            //{
+            //    throw new ArgumentNullException(nameof(nHibernateSession));
+            //}
 
             if (file != null && file.Length > 0)
             {
@@ -130,14 +149,47 @@ namespace ORMWebAPI.Controllers
 
                     //McpProjectId is used in the 1P client only and is reset once the network comes to MCP so that it does not get saved in the MCP.
                     network.McpProjectId = null;
-                    if (nHibernateSession != null)
+                    //if (nHibernateSession != null)
+                    //{
+                    //    using (var tx = nHibernateSession.BeginTransaction())
+                    //    {
+                    //        nHibernateSession.Save(network);
+                    //        tx.Commit();
+                    //    }
+                    //}
+
+
                     {
-                        using (var tx = nHibernateSession.BeginTransaction())
                         {
-                            nHibernateSession.Save(network);
-                            tx.Commit();
+                            DBConnection dbConnectionSetting = new DBConnection()
+                            {
+                                DbName = "oneplanner_cdd08082011",
+                                Host = "localhost",
+                                Password = "password",
+                                Port = 3306,
+                                User = "root"
+                            };
+                            var serverFactory = new CDBInterfaceFactory();
+                            var dbServer = serverFactory.Create(
+                                UEDBServerType.MySQL,
+                                dbConnectionSetting.Host,
+                                dbConnectionSetting.User,
+                                dbConnectionSetting.Password,
+                                dbConnectionSetting.Port);
+
+                            bool blnValidationFailed = false;
+                            bool bNeedToUpdateSchema = false;
+                            var theOrm = new OnePlannerORM(dbServer, dbConnectionSetting.DbName, out blnValidationFailed, bNeedToUpdateSchema);
+                            var databaseCommands = new DatabaseCommands(theOrm, _undoManager, _eventAggregator);
+                            if (databaseCommands != null)
+                            {
+                                databaseCommands.SaveOrUpdateNetwork(network);
+                            }
+
                         }
+
                     }
+
                 }
                 catch (FileLoadException ex)
                 {

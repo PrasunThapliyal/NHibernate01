@@ -15,8 +15,13 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Practices.Prism.Events;
+using OnePlanner.Commands;
 using OnePlanner.CommonCS.Commands;
+using OnePlanner.CommonCS.DummyWrappers.DbWrapper;
 using OnePlanner.CommonCS.Logging;
+using OnePlanner.DataAbstractionLayer.DbWrapperImplementations;
+using OnePlanner.DBInterface.DBInterface;
+using OnePlanner.OrmNhib;
 using ORM_NHibernate;
 
 namespace ORMWebAPI
@@ -52,14 +57,18 @@ namespace ORMWebAPI
             services.AddScoped<IUndoManager, UndoManager>();
             //ServiceLocator.SetLocatorProvider(() => new ServiceProviderServiceLocator(services.BuildServiceProvider()));
 
+            PopulateContainer(services);
+
+
+
             // NHibernate session registration
             // Note that we are registring SessionFactory as a Singleton
             // but session is registered per request
-            var nHibernateConfiguration = new DBSession().GetConfiguration();
-            var nHibernateSessionFactory = new DBSession().GetSessionFactory(nHibernateConfiguration);
-            services.AddSingleton(nHibernateConfiguration);
-            services.AddSingleton(nHibernateSessionFactory);
-            services.AddScoped(factory => nHibernateSessionFactory.OpenSession());
+            //var nHibernateConfiguration = new DBSession().GetConfiguration();
+            //var nHibernateSessionFactory = new DBSession().GetSessionFactory(nHibernateConfiguration);
+            //services.AddSingleton(nHibernateConfiguration);
+            //services.AddSingleton(nHibernateSessionFactory);
+            //services.AddScoped(factory => nHibernateSessionFactory.OpenSession());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -76,12 +85,18 @@ namespace ORMWebAPI
 
             SetServiceLocator(app);
 
+            
+            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
         }
-
+        private void PopulateContainer(IServiceCollection services)
+        {
+            services.AddTransient<IExtendedCDBServerDetails, ExtendedCDBServerDetails>();
+        }
 
         private void SetServiceLocator(IApplicationBuilder app)
         {

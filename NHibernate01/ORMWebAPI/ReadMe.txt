@@ -166,3 +166,14 @@ Troubleshooting
 	Kai wants me to research around this code: https://bitbucket.ciena.com/projects/ONEP/repos/oneplanner/browse/OnePlanner.Commands/CommandsComplex/UpdateTableOidCommand.cs#78
 	It inserts OIDs for slave entities (new terminology - slave entity)
 	I'll create a commit at this point. Will have to take 1P's classes for saving
+11 Nov 2019
+(#) I can now save 1P Network to MySQL
+	With the following changes done in my local OnePlannerBackend nuget package
+	- OnepSnc column rank should be renamed to sncRank (To be tried again, but it looks like hbm2ddl.keywords=auto-quote does not fix rank column name)
+	- In CDataAPI.cs, private Configuration InitializeConfigurationConnectionString(String strConnectionString, UEDataBaseType uenmDataBaseType)
+		Add this property to configuration
+		configuration.SetProperty(NHibernate.Cfg.Environment.Hbm2ddlKeyWords, "auto-quote");
+	Note: In the OnePlanner.sql file, certain columns are of type 'text' whereas they should be VARCHAR(255) because the hbm.xml file specifies them as StringClob
+		For eg in onep_ethernettl
+		However, I'm not sure if the hbm files are generated or hand written (very likely hand written).
+		Anyhow, if we use CDataAPI.UpdateSchema(), then it correctly creates the column as VARCHAR(255)
