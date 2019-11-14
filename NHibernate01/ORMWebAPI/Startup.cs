@@ -3,6 +3,7 @@ namespace ORMWebAPI
 {
     using System;
     using Ciena.BluePlanet.OnePlannerRestLibrary;
+    using Ciena.BluePlanet.OnePlannerRestLibrary.Utilities;
     using Ciena.BluePlanet.TopologyPlanningService.Utilities;
     using CommonServiceLocator;
     using Microsoft.AspNetCore.Builder;
@@ -48,6 +49,9 @@ namespace ORMWebAPI
             services.AddSingleton<IEventAggregatorFactory, EventAggregatorFactory>();
             services.AddScoped<IEventAggregator, EventAggregator>();
             services.AddScoped<IUndoManager, UndoManager>();
+
+            services.AddSingleton<IRptVersionUtility, RptVersionUtility>();
+
 
             PopulateContainer(services);
         }

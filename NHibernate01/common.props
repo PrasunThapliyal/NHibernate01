@@ -2,6 +2,6 @@
 
   <PropertyGroup>
     <BpDotnetVersion>7.0.1</BpDotnetVersion>
-    <OnepBackendVersion>0.0.16-rc2613-core-</OnepBackendVersion>
+    <OnepBackendVersion>0.0.16-rc51-core-</OnepBackendVersion>
   </PropertyGroup>
 </Project>

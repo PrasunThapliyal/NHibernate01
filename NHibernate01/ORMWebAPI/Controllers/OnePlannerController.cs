@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using Ciena.BluePlanet.OnePlannerRestLibrary.Utilities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Practices.Prism.Events;
 using OnePCommon;
 using OnePlanner.Commands;
+using OnePlanner.CommonCS.Base;
 using OnePlanner.CommonCS.Commands;
 using OnePlanner.CommonCS.DummyWrappers.DbWrapper;
 using OnePlanner.CommonCS.Logging;
@@ -24,13 +27,16 @@ namespace ORMWebAPI.Controllers
     {
         private readonly IEventAggregator _eventAggregator;
         private readonly IUndoManager _undoManager;
+        private readonly IRptVersionUtility _rptVersionUtility;
 
         public OnePlannerController(
             IEventAggregator eventAggregator,
-            IUndoManager undoManager)
+            IUndoManager undoManager,
+            IRptVersionUtility rptVersionUtility)
         {
             _eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             _undoManager = undoManager ?? throw new ArgumentNullException(nameof(undoManager));
+            _rptVersionUtility = rptVersionUtility ?? throw new ArgumentNullException(nameof(rptVersionUtility));
         }
 
         // GET: api/OnePlanner
@@ -86,10 +92,10 @@ namespace ORMWebAPI.Controllers
                 throw new ArgumentNullException(nameof(file));
             }
 
-            if (ProjectName is null)
-            {
-                throw new ArgumentNullException(nameof(ProjectName));
-            }
+            //if (ProjectName is null)
+            //{
+            //    throw new ArgumentNullException(nameof(ProjectName));
+            //}
 
             if (NetworkName is null)
             {
@@ -166,8 +172,7 @@ namespace ORMWebAPI.Controllers
                         network.Name = NetworkName;
                         DBConnection dbConnectionSetting = new DBConnection()
                         {
-                            DbName = $"onep_{DateTime.Now.ToString("yyyyMMddHHmmss")}_{ProjectName}",
-                            //DbName= "oneplanner_cdd08082011",
+                            DbName = string.IsNullOrEmpty(ProjectName) ? $"onep_{DateTime.Now.ToString("yyyyMMddHHmmss")}" : ProjectName,
                             Host = MySQLHost,
                             User = MySQLUser,
                             Password = MySQLPassword,
@@ -210,12 +215,89 @@ namespace ORMWebAPI.Controllers
         }
 
 
+        [HttpGet("GetNetwork")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetNetwork(
+            string ProjectName,
+            //string NetworkName,
+            int NetworkId,
+            string MySQLHost,
+            string MySQLUser,
+            string MySQLPassword,
+            int MySQLPort)
+        {
+            DBConnection dbConnectionSetting = new DBConnection()
+            {
+                DbName = string.IsNullOrEmpty(ProjectName) ? $"onep_{DateTime.Now.ToString("yyyyMMddHHmmss")}" : ProjectName,
+                Host = MySQLHost,
+                User = MySQLUser,
+                Password = MySQLPassword,
+                Port = MySQLPort
+            };
+
+            var serverFactory = new CDBInterfaceFactory();
+            var dbServer = serverFactory.Create(
+                UEDBServerType.MySQL,
+                dbConnectionSetting.Host,
+                dbConnectionSetting.User,
+                dbConnectionSetting.Password,
+                dbConnectionSetting.Port);
+
+            bool blnValidationFailed = false;
+            bool bNeedToUpdateSchema = false;
+            var theOrm = new OnePlannerORM(dbServer, dbConnectionSetting.DbName, out blnValidationFailed, bNeedToUpdateSchema);
+            var databaseCommands = new DatabaseCommands(theOrm, _undoManager, _eventAggregator);
+            if (databaseCommands != null)
+            {
+                var onepNetwork = databaseCommands.LoadNetwork((uint)NetworkId);
+                var result = GetFileStreamResult(onepNetwork);
+                await Task.Yield();
+                return result;
+            }
+            return null;
+        }
+
         private static string GetFileName(IFormFile file) =>
             file.ContentDisposition.Split(';')
                 .Select(x => x.Trim())
                 .Where(x => x.StartsWith("filename="))
                 .Select(x => x.Substring(9).Trim('"'))
                 .First();
+
+
+
+        private FileStreamResult GetFileStreamResult(OnepNetwork onepNetwork, LayerType layerType = LayerType.PHOTONIC_LAYER, string fileSourceWithVersion = "")
+        {
+            if (!string.IsNullOrEmpty(onepNetwork.Notes))
+            {
+                Response.Headers.Add("Warning", "File contains some issues.");
+            }
+
+            // stream the onep file
+            var tempFileName = Guid.NewGuid().ToString() + ".onep";
+            var tempFilePath = Path.Combine(Path.GetTempPath(), tempFileName);
+            var uiVersion = OnePlanner.CommonCS.Utils.CVersion.AsVersion();
+            string layerTypeStr = Enum.GetName(typeof(LayerType), layerType);
+
+            if (string.IsNullOrEmpty(fileSourceWithVersion))
+                fileSourceWithVersion = _rptVersionUtility.RptAppVersion();
+
+            OrmCommands.SaveToFile(onepNetwork, tempFilePath, uiVersion, _eventAggregator, _undoManager, false, layerTypeStr, false, fileSourceWithVersion);
+
+            var fs = new FileStream(tempFilePath, FileMode.Open);
+
+            var result = new FileStreamResult(fs, "application/octet-stream")
+            {
+
+                // This field is set so that the mvc filter in DownloadFileResultFilter.cs can use it to delete
+                // this temporary file. This is actually a misuse of the field since it's supposed to represent
+                // what the client should name the file on its client computer. But this is an internal service
+                // used by onep-proxy and viability and they ignore this field.
+                FileDownloadName = tempFileName
+            };
+
+            return result;
+        }
 
     }
 }
