@@ -26,8 +26,4 @@
     <EmbeddedResource Include="HBM\Student.hbm.xml" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BusinessObjects\" />
-  </ItemGroup>
-
 </Project>

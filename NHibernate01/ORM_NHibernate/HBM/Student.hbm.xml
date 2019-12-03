@@ -8,7 +8,9 @@
       <generator class = "hilo"/>
     </id>
 
-    <property name = "Firstname" column="firstname"/>
+    <property name = "Firstname">
+      <column name="firstname" sql-type="VARCHAR(1000)"/>
+    </property>
     <property name = "Lastname" column="lastname"/>
   </class>
 
