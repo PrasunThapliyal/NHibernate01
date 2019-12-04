@@ -11,18 +11,18 @@ namespace ORMWebAPI.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentController : ControllerBase
+    public class ProductController : ControllerBase
     {
         private readonly NHibernate.ISession _session;
 
-        public StudentController(NHibernate.ISession session)
+        public ProductController(NHibernate.ISession session)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
         }
 
-        // GET: api/Student
+        // GET: api/Product
         [HttpGet]
-        public IEnumerable<Student> Get()
+        public IEnumerable<Product> Get()
         {
             // This works, btw
             //using (var tx = _session.BeginTransaction())
@@ -60,70 +60,74 @@ namespace ORMWebAPI.Controllers
             //    student0_.firstname =? p0;
             //?p0 = 'Prasun'[Type: String(6:0:0)]
 
+            /////////////////////
+
             using (var tx = _session.BeginTransaction())
             {
-                var students = _session
-                    .Query<Student>()
-                    //.Where(s => s.Firstname == "Prasun")
+                var products = _session
+                    .Query<Product>()
+                    //.Where(s => s.Name == "Test")
                     .ToList();
-                foreach (var student in students)
+                foreach (var product in products)
                 {
-                    Console.Out.WriteLine("Student: " + student.Firstname);
+                    Console.Out.WriteLine("Student: " + product.Name);
                 }
                 tx.Commit();
 
-                return students;
+                return products;
             }
 
+            /////////////////////
         }
 
-        // GET: api/Student/5
+        // GET: api/Product/5
         [HttpGet("{id}", Name = "Get")]
-        public Student Get(int id)
+        public Product Get(int id)
         {
             using (var tx = _session.BeginTransaction())
             {
-                var student = _session.Get<Student>(id);
+                var student = _session.Get<Product>(id);
                 tx.Commit();
                 return student;
             }
         }
 
-        // POST: api/Student
+        // POST: api/Product
         [HttpPost]
-        public void Post([FromBody] Student student)
+        public void Post([FromBody] Product product)
         {
             using (var tx = _session.BeginTransaction())
             {
-                _session.Save(student);
+                _session.Save(product);
                 tx.Commit();
             }
         }
 
 
-        // PUT: api/Student/5
+        // PUT: api/Product/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] Student student)
+        public void Put(int id, [FromBody] Product product)
         {
             using (var tx = _session.BeginTransaction())
             {
-                var studentStorage = _session.Get<Student>(id);
+                var productStorage = _session.Get<Product>(id);
 
-                studentStorage.Firstname = student.Firstname;
-                studentStorage.Lastname = student.Lastname;
-                _session.Update(studentStorage);
+                productStorage.Name = product.Name;
+                productStorage.Description = product.Description;
+                productStorage.UnitPrice = product.UnitPrice;
+                _session.Update(productStorage);
                 tx.Commit();
             }
         }
 
-        // DELETE: api/ApiWithActions/5
+        // DELETE: api/Product/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
             using (var tx = _session.BeginTransaction())
             {
-                var student = _session.Get<Student>(id);
-                _session.Delete(student);
+                var product = _session.Get<Product>(id);
+                _session.Delete(product);
                 tx.Commit();
             }
         }

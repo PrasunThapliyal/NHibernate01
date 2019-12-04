@@ -156,3 +156,18 @@ Troubleshooting
 	What it would do is, instead of writing rank as column name, nH would write `rank` in the SQL query, and that is acceptable to SQL.
 	One caveat though, it probably works only if we have the mappings defined as .hbm.xml files (doesn't work with Fluent NH)
 	Anyways, we are using .hbm.xml files only, so this works for us
+04 Dec 2019
+Follow NHibernate 4.x Cookbook
+	Tried Mapping by code. Its easy but has limitations, such as not being able to specify SQL-Type, so we will not use this
+	Also tried exporting Schema to file and console .. works.
+	Class Hierarchies
+		Table per class (read Single table per class)
+			Requires <subclass extends>
+			Requires discriminator and natural id. NH creates an index on the natural id as well.
+			Not used in 1P, and is not really an option we want. For one, it doesn't allow not-null on subclass properties
+		Table per subclass
+			Creates a table for each sub class
+			Requires <joined-subclass>
+			Requires Key
+			is the way to go. We use this in 1P
+	Changed from Student class to Product class

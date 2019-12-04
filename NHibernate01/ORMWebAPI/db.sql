@@ -1,22 +1,14 @@
 
-    drop table if exists student
-
-    drop table if exists Teacher
+    drop table if exists product
 
     drop table if exists hibernate_unique_key
 
-    create table student (
+    create table product (
         id INTEGER not null,
-       firstname VARCHAR(1000),
-       lastname VARCHAR(255),
+       Name VARCHAR(255) not null,
+       description VARCHAR(100),
+       UnitPrice NUMERIC(18,4) not null,
        primary key (id)
-    )
-
-    create table Teacher (
-        Id INTEGER not null,
-       Firstname VARCHAR(255),
-       Lastname VARCHAR(255),
-       primary key (Id)
     )
 
     create table hibernate_unique_key (
