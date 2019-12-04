@@ -40,43 +40,43 @@ namespace ORM_NHibernate
                 cfg.Configure(assembly, $"{assemblyName}.{manifestResourceName}");
 
 
-                // You can also add Mappings by Code .. Note here that we have not defined any HBM for Teacher class
-                // Also not that we've updated the Student HBM file to set VARCHAR(1000) instead of the default 255
-                var mapper = new NHibernate.Mapping.ByCode.ConventionModelMapper();
-                cfg.AddMapping(mapper.CompileMappingFor(new[] { typeof(BusinessObjects.Teacher) }));
+                //// You can also add Mappings by Code .. Note here that we have not defined any HBM for Teacher class
+                //// Also not that we've updated the Student HBM file to set VARCHAR(1000) instead of the default 255
+                //var mapper = new NHibernate.Mapping.ByCode.ConventionModelMapper();
+                //cfg.AddMapping(mapper.CompileMappingFor(new[] { typeof(BusinessObjects.Teacher) }));
 
-                // Example Schema Export
-                /*
-                    drop table if exists student
+                //// Example Schema Export
+                ///*
+                //    drop table if exists student
 
-                    drop table if exists Teacher
+                //    drop table if exists Teacher
 
-                    drop table if exists hibernate_unique_key
+                //    drop table if exists hibernate_unique_key
 
-                    create table student (
-                        id INTEGER not null,
-                       firstname VARCHAR(1000),
-                       lastname VARCHAR(255),
-                       primary key (id)
-                    )
+                //    create table student (
+                //        id INTEGER not null,
+                //       firstname VARCHAR(1000),
+                //       lastname VARCHAR(255),
+                //       primary key (id)
+                //    )
 
-                    create table Teacher (
-                        Id INTEGER not null,
-                       Firstname VARCHAR(255),
-                       Lastname VARCHAR(255),
-                       primary key (Id)
-                    )
+                //    create table Teacher (
+                //        Id INTEGER not null,
+                //       Firstname VARCHAR(255),
+                //       Lastname VARCHAR(255),
+                //       primary key (Id)
+                //    )
 
-                    create table hibernate_unique_key (
-                         next_hi INTEGER
-                    )
+                //    create table hibernate_unique_key (
+                //         next_hi INTEGER
+                //    )
 
-                    insert into hibernate_unique_key values ( 1 )
-                 * 
-                 * */
+                //    insert into hibernate_unique_key values ( 1 )
+                // * 
+                // * */
 
-                var schemaExport = new NHibernate.Tool.hbm2ddl.SchemaExport(cfg);
-                schemaExport.SetOutputFile(@"db.sql").Execute(true, true, false);
+                //var schemaExport = new NHibernate.Tool.hbm2ddl.SchemaExport(cfg);
+                //schemaExport.SetOutputFile(@"db.sql").Execute(true, true, false);
 
                 cfg.SetInterceptor(new AuditInterceptor());
             }
