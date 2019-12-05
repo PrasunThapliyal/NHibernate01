@@ -13,6 +13,9 @@
 
   <ItemGroup>
     <None Remove="Configuration\hibernate.cfg.xml" />
+    <None Remove="HBM\ActorRole.hbm.xml" />
+    <None Remove="HBM\Book.hbm.xml" />
+    <None Remove="HBM\Movie.hbm.xml" />
     <None Remove="HBM\Product.hbm.xml" />
   </ItemGroup>
 
@@ -20,6 +23,9 @@
     <EmbeddedResource Include="Configuration\hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="HBM\ActorRole.hbm.xml" />
+    <EmbeddedResource Include="HBM\Book.hbm.xml" />
+    <EmbeddedResource Include="HBM\Movie.hbm.xml" />
   </ItemGroup>
 
   <ItemGroup>

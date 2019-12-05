@@ -77,8 +77,79 @@ namespace ORMWebAPI.Controllers
                 return products;
             }
 
+            /*
+             * 
+                NHibernate:
+                    select
+                        product0_.id as id1_0_,
+                        product0_.Name as name2_0_,
+                        product0_.description as description3_0_,
+                        product0_.UnitPrice as unitprice4_0_,
+                        product0_1_.ISBN as isbn2_1_,
+                        product0_1_.Author as author3_1_,
+                        product0_2_.Director as director2_2_,
+                        case
+                            when product0_1_.Id is not null then 1
+                            when product0_2_.Id is not null then 2
+                            when product0_.id is not null then 0
+                        end as clazz_
+                    from
+                        product product0_
+                    left outer join
+                        Book product0_1_
+                            on product0_.id=product0_1_.Id
+                    left outer join
+                        Movie product0_2_
+                            on product0_.id=product0_2_.Id
+             * 
+             * 
+             * */
+
+
             /////////////////////
         }
+
+
+        // GET: api/Product/Movie
+        [HttpGet("Movie")]
+        public IEnumerable<Movie> GetMovies()
+        {
+            using (var tx = _session.BeginTransaction())
+            {
+                var movies = _session
+                    .Query<Movie>()
+                    .ToList();
+                foreach (var product in movies)
+                {
+                    Console.Out.WriteLine("Student: " + product.Name);
+                }
+                tx.Commit();
+
+                return movies;
+            }
+
+            /*
+             * 
+                NHibernate:
+                    select
+                        movie0_.Id as id1_0_,
+                        movie0_1_.Name as name2_0_,
+                        movie0_1_.description as description3_0_,
+                        movie0_1_.UnitPrice as unitprice4_0_,
+                        movie0_.Director as director2_2_
+                    from
+                        Movie movie0_
+                    inner join
+                        product movie0_1_
+                            on movie0_.Id=movie0_1_.id
+             * 
+             * 
+             * */
+
+
+            /////////////////////
+        }
+
 
         // GET: api/Product/5
         [HttpGet("{id}", Name = "Get")]
@@ -99,6 +170,109 @@ namespace ORMWebAPI.Controllers
             using (var tx = _session.BeginTransaction())
             {
                 _session.Save(product);
+                tx.Commit();
+            }
+        }
+
+
+        // POST: api/Product/Movie
+        [HttpPost("Movie")]
+        public void Post([FromBody] Movie movie)
+        {
+            /*
+             * 
+                {
+	                "Name": "Movie with Actors",
+	                "Description": "Test Movie",
+	                "UnitPrice": 320,
+	                "Director": "FF DD",
+	                "Actors":
+	                [
+		                {
+			                "Actor":"Actor 1",
+			                "Role": "Villian"
+		                },
+		                {
+			                "Actor":"Actor 2",
+			                "Role": "Heroine"
+		                }
+	                ]
+                }
+             * 
+             * 
+             * */
+
+            using (var tx = _session.BeginTransaction())
+            {
+                _session.Save(movie);
+                tx.Commit();
+            }
+
+            /*
+             * 
+             * 
+                NHibernate:
+                    INSERT
+                    INTO
+                        product
+                        (Name, description, UnitPrice, id)
+                    VALUES
+                        (?p0, ?p1, ?p2, ?p3);
+                    ?p0 = 'Movie with Actors' [Type: String (17:0:0)], ?p1 = 'Test Movie' [Type: String (10:0:0)], ?p2 = 320 [Type: Currency (0:0:0)], ?p3 = 32769 [Type: Int32 (0:0:0)]
+                NHibernate:
+                    INSERT
+                    INTO
+                        Movie
+                        (Director, Id)
+                    VALUES
+                        (?p0, ?p1);
+                    ?p0 = 'FF DD' [Type: String (5:0:0)], ?p1 = 32769 [Type: Int32 (0:0:0)]
+                NHibernate:
+                    INSERT
+                    INTO
+                        ActorRole
+                        (Actor, Role, id)
+                    VALUES
+                        (?p0, ?p1, ?p2);
+                    ?p0 = 'Actor 1' [Type: String (7:0:0)], ?p1 = 'Villian' [Type: String (7:0:0)], ?p2 = 65536 [Type: Int32 (0:0:0)]
+                NHibernate:
+                    INSERT
+                    INTO
+                        ActorRole
+                        (Actor, Role, id)
+                    VALUES
+                        (?p0, ?p1, ?p2);
+                    ?p0 = 'Actor 2' [Type: String (7:0:0)], ?p1 = 'Heroine' [Type: String (7:0:0)], ?p2 = 65537 [Type: Int32 (0:0:0)]
+                NHibernate:
+                    UPDATE
+                        ActorRole
+                    SET
+                        MovieId = ?p0,
+                        ActorIndex = ?p1
+                    WHERE
+                        id = ?p2;
+                    ?p0 = 32769 [Type: Int32 (0:0:0)], ?p1 = 0 [Type: Int32 (0:0:0)], ?p2 = 65536 [Type: Int32 (0:0:0)]
+                NHibernate:
+                    UPDATE
+                        ActorRole
+                    SET
+                        MovieId = ?p0,
+                        ActorIndex = ?p1
+                    WHERE
+                        id = ?p2;
+                    ?p0 = 32769 [Type: Int32 (0:0:0)], ?p1 = 1 [Type: Int32 (0:0:0)], ?p2 = 65537 [Type: Int32 (0:0:0)]
+             * 
+             * */
+        }
+
+
+        // POST: api/Product/Movie
+        [HttpPost("Book")]
+        public void Post([FromBody] Book book)
+        {
+            using (var tx = _session.BeginTransaction())
+            {
+                _session.Save(book);
                 tx.Commit();
             }
         }

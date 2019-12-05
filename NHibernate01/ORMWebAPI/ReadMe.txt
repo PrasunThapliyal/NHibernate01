@@ -171,3 +171,8 @@ Follow NHibernate 4.x Cookbook
 			Requires Key
 			is the way to go. We use this in 1P
 	Changed from Student class to Product class
+	Add Base class EntityBase
+	Add classes Product : EntityBase; Movie: Product; Book: Product
+	Add One-to-many relation from Movie to class ActorRole
+	Note: In 1-to-many relation, if Movie has 2 actors, NH fires 2 inserts for actors and then 2 updates for actors to update the FK
+		TODO: Could this be optimized so NH makes a single call to insert both the actors, and maybe likewise for the update call
