@@ -46,7 +46,7 @@ namespace ORM_NHibernate
                 //cfg.AddMapping(mapper.CompileMappingFor(new[] { typeof(BusinessObjects.Teacher) }));
 
                 var schemaExport = new NHibernate.Tool.hbm2ddl.SchemaExport(cfg);
-                schemaExport.SetOutputFile(@"db.sql").Execute(true, true, false);
+                schemaExport.SetOutputFile(@"db.sql").Execute(true, false, false);
 
                 //// Example Schema Export
                 ///

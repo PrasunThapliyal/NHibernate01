@@ -119,9 +119,9 @@ namespace ORMWebAPI.Controllers
                 var movies = _session
                     .Query<Movie>()
                     .ToList();
-                foreach (var product in movies)
+                foreach (var movie in movies)
                 {
-                    Console.Out.WriteLine("Student: " + product.Name);
+                    Console.Out.WriteLine("Student: " + movie.Name);
                 }
                 tx.Commit();
 
