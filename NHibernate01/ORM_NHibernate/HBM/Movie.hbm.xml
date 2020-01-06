@@ -5,8 +5,9 @@
     <key column="Id" />
     
     <property name="Director" />
-    <list name="Actors" cascade="all-delete-orphan">
+    <list name="Actors" inverse="false" cascade="all">
       <key column="MovieId" />
+      
       <index column="ActorIndex" />
       <one-to-many class="ActorRole"/>
     </list>

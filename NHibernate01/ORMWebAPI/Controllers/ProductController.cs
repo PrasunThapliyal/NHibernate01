@@ -266,6 +266,42 @@ namespace ORMWebAPI.Controllers
         }
 
 
+        // POST: api/Product/TestMovie
+        [HttpPost("TestMovie")]
+        public void Post()
+        {
+            var actor1 = new ActorRole()
+            {
+                Actor = "Shakti Kapoor",
+                Role = "Hero"
+            };
+            var actor2 = new ActorRole()
+            {
+                Actor = "AB",
+                Role = "Villian"
+            };
+
+            var movie1 = new Movie()
+            {
+                Name = "The Burning Train",
+                Description = "Test",
+                UnitPrice = 310,
+                Director = "Quinten Tarantino",
+                Actors = new List<ActorRole>() { actor1, actor2 }
+            };
+
+
+            using (var tx = _session.BeginTransaction())
+            {
+                //_session.Save(actor1);
+                //_session.Save(actor2);
+                _session.Save(movie1);
+                tx.Commit();
+            }
+
+        }
+
+
         // POST: api/Product/Movie
         [HttpPost("Book")]
         public void Post([FromBody] Book book)
