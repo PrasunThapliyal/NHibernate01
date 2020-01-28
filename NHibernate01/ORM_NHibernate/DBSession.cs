@@ -46,7 +46,7 @@ namespace ORM_NHibernate
                 //cfg.AddMapping(mapper.CompileMappingFor(new[] { typeof(BusinessObjects.Teacher) }));
 
                 var schemaExport = new NHibernate.Tool.hbm2ddl.SchemaExport(cfg);
-                schemaExport.SetOutputFile(@"db.sql").Execute(useStdOut: true, execute: true, justDrop: false);
+                schemaExport.SetOutputFile(@"db.sql").Execute(useStdOut: true, execute: false, justDrop: false);
 
                 //// Example Schema Export
                 ///
@@ -107,6 +107,27 @@ namespace ORM_NHibernate
                     insert into hibernate_unique_key values ( 1 )
                  * 
                  * */
+
+
+                // Alternately, we can use SchemaUpdate.Execute, as in done in 1P
+                NHibernate.Tool.hbm2ddl.SchemaUpdate schemaUpdate = new NHibernate.Tool.hbm2ddl.SchemaUpdate(cfg);
+                schemaUpdate.Execute(useStdOut: true, doUpdate: true);
+
+                // Note
+                // SchemaUpdate.Execute is way cooler than SchemaExport.Filename.Execute
+                // When I added a new property in Movie.hbm.xml (and in the .cs), SchemaUpdate automatically created statement 
+                // to tell the diff in schema, and only this got executed:
+                /*
+                    alter table Movie
+                        add column NewProp VARCHAR(255)
+                 * 
+                 * */
+                 //
+                 // However, it does not work as expected all the times, for eg, 
+                 // if I rename a column in HBM, it just adds a new column with new name
+                 // if I change the sql-type from VARCHAR(255) to VARCHAR(100), nothing is executed and the column type remains unchanged
+                 // So we will need manual scripts for migration
+                 //
 
                 cfg.SetInterceptor(new AuditInterceptor());
             }

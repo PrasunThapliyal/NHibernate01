@@ -48,6 +48,7 @@ alter table Movie  drop foreign key FK_13C98C6D
     create table Movie (
         Id INTEGER not null,
        Director VARCHAR(255),
+       NewProp VARCHAR(100),
        primary key (Id)
     )
 

@@ -11,5 +11,8 @@
       <index column="ActorIndex" />
       <one-to-many class="ActorRole"/>
     </list>
+    <property name="NewProp">
+      <column name="NewProp" sql-type="VARCHAR(100)" />
+    </property>
   </joined-subclass>
 </hibernate-mapping>
