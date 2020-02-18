@@ -3,11 +3,11 @@
 <hibernate-mapping xmlns = "urn:nhibernate-mapping-2.2"
    assembly = "ORM_NHibernate" namespace = "ORM_NHibernate.BusinessObjects">
 
-  <class name = "Product" table="product" >
+  <class name = "Product" table="product" discriminator-value="0">
     <id name = "Id" column="id">
       <generator class = "hilo"/>
     </id>
-    
+    <discriminator column="Discriminator" not-null="false" type="int" force="true"/>
     <property name="Name" not-null="true" />
     <property name="Description">
       <column name="description" sql-type="VARCHAR(100)"/>

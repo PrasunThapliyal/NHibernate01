@@ -1,23 +1,23 @@
 
     
-alter table ActorRole  drop foreign key FK_B3337C3E
+alter table ActorRole  drop foreign key FK_767D4F64
 
 
     
-alter table Book  drop foreign key FK_2E5EFA32
+alter table book  drop foreign key FK_118C435D
 
 
     
-alter table Movie  drop foreign key FK_13C98C6D
+alter table movie  drop foreign key FK_4449E6F4
 
 
     drop table if exists ActorRole
 
     drop table if exists product
 
-    drop table if exists Book
+    drop table if exists book
 
-    drop table if exists Movie
+    drop table if exists movie
 
     drop table if exists hibernate_unique_key
 
@@ -32,20 +32,21 @@ alter table Movie  drop foreign key FK_13C98C6D
 
     create table product (
         id INTEGER not null,
+       Discriminator INTEGER,
        Name VARCHAR(255) not null,
        description VARCHAR(100),
        UnitPrice NUMERIC(18,4) not null,
        primary key (id)
     )
 
-    create table Book (
+    create table book (
         Id INTEGER not null,
        ISBN VARCHAR(255),
        Author VARCHAR(255),
        primary key (Id)
     )
 
-    create table Movie (
+    create table movie (
         Id INTEGER not null,
        Director VARCHAR(255),
        NewProp VARCHAR(100),
@@ -54,19 +55,19 @@ alter table Movie  drop foreign key FK_13C98C6D
 
     alter table ActorRole 
         add index (MovieId), 
-        add constraint FK_B3337C3E 
+        add constraint FK_767D4F64 
         foreign key (MovieId) 
-        references Movie (Id)
+        references product (id)
 
-    alter table Book 
+    alter table book 
         add index (Id), 
-        add constraint FK_2E5EFA32 
+        add constraint FK_118C435D 
         foreign key (Id) 
         references product (id)
 
-    alter table Movie 
+    alter table movie 
         add index (Id), 
-        add constraint FK_13C98C6D 
+        add constraint FK_4449E6F4 
         foreign key (Id) 
         references product (id)
 

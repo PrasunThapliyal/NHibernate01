@@ -1,9 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns = "urn:nhibernate-mapping-2.2"
    assembly = "ORM_NHibernate" namespace = "ORM_NHibernate.BusinessObjects">
-  <joined-subclass name="Book" extends="Product">
-    <key column="Id" />
-    <property name="ISBN" />
-    <property name="Author" />
-  </joined-subclass>
+  <subclass name="Book" extends="Product" discriminator-value="2">
+    <join table="book" fetch="select">
+      <key column="Id" />
+      <property name="ISBN" />
+      <property name="Author" />
+    </join>
+  </subclass>
 </hibernate-mapping>

@@ -45,6 +45,14 @@ namespace ORM_NHibernate
                 //var mapper = new NHibernate.Mapping.ByCode.ConventionModelMapper();
                 //cfg.AddMapping(mapper.CompileMappingFor(new[] { typeof(BusinessObjects.Teacher) }));
 
+                foreach (var mapping in cfg.ClassMappings)
+                {
+                    string x = $"(1) {mapping.ClassName}, (2) {mapping.Discriminator}, (3) {mapping.DiscriminatorValue}, (4) {mapping.IsDiscriminatorValueNotNull}";
+                    System.Diagnostics.Debug.WriteLine(x);
+                }
+
+
+
                 var schemaExport = new NHibernate.Tool.hbm2ddl.SchemaExport(cfg);
                 schemaExport.SetOutputFile(@"db.sql").Execute(useStdOut: true, execute: false, justDrop: false);
 

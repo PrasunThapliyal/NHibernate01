@@ -9,5 +9,7 @@ namespace ORM_NHibernate.BusinessObjects
         public virtual string Director { get; set; }
         public virtual IList<ActorRole> Actors { get; set; }
         public virtual string NewProp { get; set; }
+
+        public override sbyte Discriminator { get; set; } = 1;
     }
 }
