@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns = "urn:nhibernate-mapping-2.2"
+   assembly = "ORM_NHibernate" namespace = "ORM_NHibernate.BusinessObjects">
+  <class name="OnepNetwork" table="onep_network" lazy="true">
+    <id name = "Id" column="oid">
+      <generator class = "hilo"/>
+    </id>
+
+    <property name="Name" column="name" />
+    <property name="McpProjectId" column="mcpProjectId" />
+
+    <bag name="OnepAmptps" lazy="true" cascade="all" inverse="true" fetch="select">
+      <key column="network"></key>
+      <one-to-many class="OnepAmptp"></one-to-many>
+    </bag>
+    
+    <bag name="OnepFibertls" lazy="true" cascade="all" inverse="true" fetch="select" >
+      <key column="network"></key>
+      <one-to-many class="OnepFibertl"></one-to-many>
+    </bag>
+
+    <bag name="OnepTerminationpoints" lazy="true" cascade="all" inverse="true" fetch="select" >
+      <key column="network"></key>
+      <one-to-many class="OnepTerminationpoint"></one-to-many>
+    </bag>
+    
+    <bag name="OnepTopologicallinks" lazy="true" cascade="all" inverse="true" fetch="select" >
+      <key column="network"></key>
+      <one-to-many class="OnepTopologicallink"></one-to-many>
+    </bag>
+    
+  </class>
+</hibernate-mapping>

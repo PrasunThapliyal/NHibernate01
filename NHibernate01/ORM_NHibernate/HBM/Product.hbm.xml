@@ -13,6 +13,9 @@
       <column name="description" sql-type="VARCHAR(100)"/>
     </property>
     <property name="UnitPrice" not-null="true" type="Currency" />
+
+    <many-to-one name="ProductTpRole" column="TpRole"  cascade="all" />
+    
   </class>
 
 </hibernate-mapping>

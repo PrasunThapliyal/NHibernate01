@@ -291,30 +291,30 @@ namespace ORMWebAPI.Controllers
             };
 
 
-            var book = new Book()
-            {
-                Name = "Book1",
-                Description = "N",
-                UnitPrice = (decimal)200.0,
-                ISBN = "SGF",
-                Author = "PPT"
-            };
+            //var book = new Book()
+            //{
+            //    Name = "Book1",
+            //    Description = "N",
+            //    UnitPrice = (decimal)200.0,
+            //    ISBN = "SGF",
+            //    Author = "PPT"
+            //};
 
             using (var tx = _session.BeginTransaction())
             {
                 //_session.Save(actor1);
                 //_session.Save(actor2);
                 _session.Save(movie1);
-                _session.Save(book);
+                //_session.Save(book);
                 tx.Commit();
             }
 
-            using (var tx = _session.BeginTransaction())
-            {
-                book.Name = "TTT";
-                _session.Save(book);
-                tx.Commit();
-            }
+            //using (var tx = _session.BeginTransaction())
+            //{
+            //    book.Name = "TTT";
+            //    _session.Save(book);
+            //    tx.Commit();
+            //}
         }
 
 
