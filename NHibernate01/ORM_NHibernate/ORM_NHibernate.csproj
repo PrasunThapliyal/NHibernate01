@@ -13,23 +13,20 @@
 
   <ItemGroup>
     <None Remove="Configuration\hibernate.cfg.xml" />
-    <None Remove="HBM\ActorRole.hbm.xml" />
-    <None Remove="HBM\Book.hbm.xml" />
-    <None Remove="HBM\Movie.hbm.xml" />
-    <None Remove="HBM\Product.hbm.xml" />
+    <None Remove="HBM\OnepAmptp.hbm.xml" />
+    <None Remove="HBM\OnepNetwork.hbm.xml" />
+    <None Remove="HBM\OnepTerminationpoint.hbm.xml" />
+    <None Remove="HBM\OnepTopologicallink.hbm.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Configuration\hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="HBM\ActorRole.hbm.xml" />
-    <EmbeddedResource Include="HBM\Book.hbm.xml" />
-    <EmbeddedResource Include="HBM\Movie.hbm.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="HBM\Product.hbm.xml" />
+    <EmbeddedResource Include="HBM\OnepAmptp.hbm.xml" />
+    <EmbeddedResource Include="HBM\OnepNetwork.hbm.xml" />
+    <EmbeddedResource Include="HBM\OnepTerminationpoint.hbm.xml" />
+    <EmbeddedResource Include="HBM\OnepTopologicallink.hbm.xml" />
   </ItemGroup>
 
 </Project>

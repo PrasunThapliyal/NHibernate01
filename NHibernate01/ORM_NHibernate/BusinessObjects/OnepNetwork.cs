@@ -8,6 +8,8 @@ namespace ORM_NHibernate.BusinessObjects
 
 	public partial class OnepNetwork: BusinessBase<uint>
     {
+		#region Declarations
+
 		private string _name = null;
 		private string _mcpProjectId = null;
 		private IList<OnepAmptp> _onepAmptps = new List<OnepAmptp>();
@@ -15,9 +17,11 @@ namespace ORM_NHibernate.BusinessObjects
 		private IList<OnepTerminationpoint> _onepTerminationpoints = new List<OnepTerminationpoint>();
 		private IList<OnepTopologicallink> _onepTopologicallinks = new List<OnepTopologicallink>();
 
-		#region Constructors
+        #endregion
 
-		public OnepNetwork() { }
+        #region Constructors
+
+        public OnepNetwork() { }
 
 		public OnepNetwork(long defaultID) : base(defaultID) { }
 
@@ -33,6 +37,16 @@ namespace ORM_NHibernate.BusinessObjects
 
 		#endregion
 
+		#region Manual Additions
+
+		static OnepNetwork() { }
+
+		public override string ToString()
+		{
+			return String.Format("OnepNetwork {0}", this.Name);
+		}
+
+		#endregion
 
 		#region Methods
 

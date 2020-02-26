@@ -12,24 +12,21 @@
 
     <property name="Name" column="name" />
     <property name="Length" column="length" />
-    <property name="DefaultId" column="defaultId" />
 
-    <property name="Ptp" column="PTP" />
-    <property name="Name" column="name" />
-    <property name="Notes" column="notes" />
-    
+    <many-to-one name="OnepTopologicallinkMemberByUniMate" column="uniMate" class="OnepTopologicallink" />
+    <many-to-one name="OnepTerminationpointByAEndTP" column="aEndTP" class="OnepTerminationpoint" />
+    <many-to-one name="OnepTerminationpointByZEndTP" column="zEndTP" class="OnepTerminationpoint" />
     <many-to-one name="OnepNetwork" column="network" class="OnepNetwork" />
-    
-    <bag name="OnepTopologicallinksForAEndTP" lazy="true" cascade="all" inverse="true" fetch="select" >
-      <key column="aEndTP"></key>
-      <one-to-many class="OnepTopologicallink"></one-to-many>
-    </bag>
-    <bag name="OnepTopologicallinksForZEndTP" lazy="true" cascade="all" inverse="true" fetch="select" >
-      <key column="zEndTP"></key>
-      <one-to-many class="OnepTopologicallink"></one-to-many>
-    </bag>
-    
-    <many-to-one name="OnepAmpRole" cascade="all" class="OnepAmptp" property-ref="OnepTerminationpoint"/>
+
+    <subclass name="OnepFibertl" lazy="true" batch-size="100" discriminator-value="2" extends="OnepTopologicallink">
+      <join table="onep_fibertl" fetch="select">
+        <key column="oid" />
+        <property name="Loss" column="loss" />
+
+        <many-to-one name="OnepNetwork" column="network" class="OnepNetwork" />
+      </join>
+    </subclass>
+
   </class>
 
 </hibernate-mapping>

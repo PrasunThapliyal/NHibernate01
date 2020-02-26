@@ -9,7 +9,7 @@
     </id>
 
     <property name="TargetGain" column="targetGain" />
-    <one-to-one name="OnepTerminationpoint" class="OnepTerminationpoint" constrained="true"/>
+    <!--<one-to-one name="OnepTerminationpoint" class="OnepTerminationpoint" constrained="true"/>-->
   </class>
 
 </hibernate-mapping>

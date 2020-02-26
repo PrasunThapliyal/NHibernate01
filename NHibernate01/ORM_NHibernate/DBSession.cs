@@ -37,7 +37,7 @@ namespace ORM_NHibernate
                 var assemblyName = assembly.GetName().Name;
                 var manifestResourceName = "Configuration.hibernate.cfg.xml";
 
-                cfg.Configure(assembly, $"{assemblyName}.{manifestResourceName}");
+                cfg.Configure(assembly, $"{assemblyName}.{manifestResourceName}"); // ORM_NHibernate.Configuration.hibernate.cfg.xml
 
 
                 //// You can also add Mappings by Code .. Note here that we have not defined any HBM for Teacher class

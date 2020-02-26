@@ -16,23 +16,11 @@ namespace ORM_NHibernate.BusinessObjects
 		private IList<OnepTopologicallink> _onepTopologicallinks1 = new List<OnepTopologicallink>();
 		private IList<OnepTopologicallink> _onepTopologicallinks2 = new List<OnepTopologicallink>();
 
-		public virtual byte? Ptp { get => _ptp; set => _ptp = value; }
-		public virtual string Name { get => _name; set => _name = value; }
-		public virtual string Notes { get => _notes; set => _notes = value; }
-		public virtual OnepNetwork OnepNetwork { get => _onepNetwork; set => _onepNetwork = value; }
-		public virtual byte? Role { get => _role; set => _role = value; }
-		public virtual IList<OnepTopologicallink> OnepTopologicallinksForAEndTP
-		{
-			get { return _onepTopologicallinks1; }
-			set { _onepTopologicallinks1 = value; }
-		}
-		public virtual IList<OnepTopologicallink> OnepTopologicallinksForZEndTP { get => _onepTopologicallinks2; set => _onepTopologicallinks2 = value; }
-
 		#endregion
 
-		#region Constructors
+        #region Constructors
 
-		public OnepTerminationpoint() { }
+        public OnepTerminationpoint() { }
 
 		public OnepTerminationpoint(long defaultID) : base(defaultID) { }
 
@@ -64,6 +52,18 @@ namespace ORM_NHibernate.BusinessObjects
 
 			return sb.ToString();
 		}
+		#endregion
+
+		#region Properties
+
+		public virtual byte? Ptp { get => _ptp; set => _ptp = value; }
+		public virtual string Name { get => _name; set => _name = value; }
+		public virtual string Notes { get => _notes; set => _notes = value; }
+		public virtual OnepNetwork OnepNetwork { get => _onepNetwork; set => _onepNetwork = value; }
+		public virtual byte? Role { get => _role; set => _role = value; }
+		public virtual IList<OnepTopologicallink> OnepTopologicallinksForAEndTP { get => _onepTopologicallinks1; set => _onepTopologicallinks1 = value; }
+		public virtual IList<OnepTopologicallink> OnepTopologicallinksForZEndTP { get => _onepTopologicallinks2; set => _onepTopologicallinks2 = value; }
+
 		#endregion
 
 	}
