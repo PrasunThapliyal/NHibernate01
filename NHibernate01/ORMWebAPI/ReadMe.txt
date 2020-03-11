@@ -183,3 +183,22 @@ Follow NHibernate 4.x Cookbook
 	The way it is modeled, an Id (oid) gets assigned to TP, and we (i.e. NH) use the same oid in Amptp to mean that they are 1-1
 	Then when we try to save, AmpTP save requires TP to be saved first, but somehow NH does not handle this well, and we get this exception:
 	MySql.Data.MySqlClient.MySqlException: 'Cannot add or update a child row: a foreign key constraint fails (`nhibernate01`.`onep_amptp`, CONSTRAINT `FK_C4980009` FOREIGN KEY (`oid`) REFERENCES `onep_terminationpoint` (`oid`))'
+
+	Kai fixed this by inserting oids first, and something more around this.
+	I guess the intent is to get around the above exception. The insert oid only inserts the oid column and no other properties of TP.
+	That way, when we get to inserting Amptp, we dont excounter the FK exception.
+
+	Fix:
+	While I haven't understood Kai's fix completely, I've a different fix here.
+	ref: https://ayende.com/blog/3960/nhibernate-mapping-one-to-one
+	Please go through this commit.
+	It involves two important things: 
+		(1) We disabled FK in OnepAmptp.hbm while defining 1-1 with TP using foreign-key="none"
+		btw, we also added unique="true" to TP .. And we may as well try fetch="join" in Amptp and/or TP to experiment with performance.
+		(2) While saving, we must save the TPs and AmpTPs first and then the network (see HttpPost on NetworksController)
+
+	Relevant exceptions to note:
+		(1) NHibernate.TransientObjectException: 'object references an unsaved transient instance - save the transient instance before flushing or set cascade action for the property to something that would make it autosave. Type: ORM_NHibernate.BusinessObjects.OnepTerminationpoint, Entity: TP TP 01'
+			This tells us that we must insert TP, AmpTP and then Network
+		(2) MySql.Data.MySqlClient.MySqlException: 'Cannot add or update a child row: a foreign key constraint fails (`nhibernate01`.`onep_amptp`, CONSTRAINT `FK_C4980009` FOREIGN KEY (`oid`) REFERENCES `onep_terminationpoint` (`oid`))'
+			Well, we resolved this by disabling FK

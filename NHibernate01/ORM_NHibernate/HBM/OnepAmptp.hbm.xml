@@ -12,7 +12,7 @@
     </id>
     
     <property name="TargetGain" column="targetGain" />
-    <one-to-one name="OnepTerminationpoint" class="OnepTerminationpoint" constrained="true"/>
+    <one-to-one name="OnepTerminationpoint" class="OnepTerminationpoint" constrained="true" foreign-key="none"/>
     <many-to-one name="OnepNetwork" column="network" class="OnepNetwork" />
   </class>
 
