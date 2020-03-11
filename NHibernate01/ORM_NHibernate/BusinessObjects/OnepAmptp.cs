@@ -6,7 +6,6 @@ namespace ORM_NHibernate.BusinessObjects
 		#region Declarations
 
 		private double? _targetGain = null;
-		//private OnepTerminationpoint _onepTerminationpoint = null;
 
 		#endregion
 
@@ -42,12 +41,17 @@ namespace ORM_NHibernate.BusinessObjects
 		#region Properties
 
 		public virtual double? TargetGain { get => _targetGain; set => _targetGain = value; }
+		public virtual OnepNetwork OnepNetwork { get => _onepNetwork; set => _onepNetwork = value; }
+		public virtual OnepTerminationpoint OnepTerminationpoint { get => _onepTerminationpoint; set => _onepTerminationpoint = value; }
 
 		#endregion
 
 		#region Manual Additions
 
-		//public virtual OnepTerminationpoint OnepTerminationpoint { get => _onepTerminationpoint; set => _onepTerminationpoint = value; }
+		// TODO : Why is OnepNetwork in the manual additions in 1P
+		// Likewise, onepTerminationpoint
+		private OnepNetwork _onepNetwork = null;
+		private OnepTerminationpoint _onepTerminationpoint = null;
 
 		#endregion
 

@@ -23,11 +23,11 @@
       <one-to-many class="OnepTopologicallink"></one-to-many>
     </bag>
     
-    <!--<many-to-one name="OnepAmpRole" cascade="all" class="OnepAmptp" property-ref="OnepTerminationpoint"/>-->
+    <many-to-one name="OnepAmpRole" cascade="all" class="OnepAmptp" property-ref="OnepTerminationpoint"/>
 
-    <component name="OnepAmpRole" class="OnepAmptp">
+    <!--<component name="OnepAmpRole" class="OnepAmptp">
       <property name="TargetGain" column="targetGain" />
-    </component>
+    </component>-->
     
   </class>
 

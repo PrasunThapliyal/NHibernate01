@@ -176,3 +176,10 @@ Follow NHibernate 4.x Cookbook
 	Add One-to-many relation from Movie to class ActorRole
 	Note: In 1-to-many relation, if Movie has 2 actors, NH fires 2 inserts for actors and then 2 updates for actors to update the FK
 		TODO: Could this be optimized so NH makes a single call to insert both the actors, and maybe likewise for the update call
+
+11 March 2020
+	OnePlanner's one-to-one mapping problem explained:
+	There is a 1-to-1 between Terminationpoint and Amptp, for eg
+	The way it is modeled, an Id (oid) gets assigned to TP, and we (i.e. NH) use the same oid in Amptp to mean that they are 1-1
+	Then when we try to save, AmpTP save requires TP to be saved first, but somehow NH does not handle this well, and we get this exception:
+	MySql.Data.MySqlClient.MySqlException: 'Cannot add or update a child row: a foreign key constraint fails (`nhibernate01`.`onep_amptp`, CONSTRAINT `FK_C4980009` FOREIGN KEY (`oid`) REFERENCES `onep_terminationpoint` (`oid`))'

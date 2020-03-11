@@ -114,7 +114,7 @@ namespace ORMWebAPI.Controllers
 
         // GET: api/OnepNetwork/5
         [HttpGet("{id}", Name = "Get")]
-        public OnepNetwork Get(int id)
+        public OnepNetwork Get(uint id)
         {
             using (var tx = _session.BeginTransaction())
             {
@@ -126,8 +126,9 @@ namespace ORMWebAPI.Controllers
 
         // POST: api/OnepNetwork
         [HttpPost]
-        public void Post([FromBody] OnepNetwork onepNetwork)
+        public object Post()
         {
+            OnepNetwork onepNetwork = null;
             {
                 onepNetwork = new OnepNetwork()
                 {
@@ -187,7 +188,8 @@ namespace ORMWebAPI.Controllers
                 var onepAmpTP1 = new OnepAmptp()
                 {
                     TargetGain = 2.0,
-                    //OnepTerminationpoint = onepTP1
+                    OnepNetwork = onepNetwork,
+                    OnepTerminationpoint = onepTP1
                 };
                 onepTP1.OnepAmpRole = onepAmpTP1;
                 onepNetwork.OnepAmptps.Add(onepAmpTP1);
@@ -195,7 +197,8 @@ namespace ORMWebAPI.Controllers
                 var onepAmpTP2 = new OnepAmptp()
                 {
                     TargetGain = 2.0,
-                    //OnepTerminationpoint = onepTP2
+                    OnepNetwork = onepNetwork,
+                    OnepTerminationpoint = onepTP2
                 };
                 onepTP2.OnepAmpRole = onepAmpTP2;
                 onepNetwork.OnepAmptps.Add(onepAmpTP2);
@@ -223,6 +226,8 @@ namespace ORMWebAPI.Controllers
                 _session.Save(onepNetwork);
                 tx.Commit();
             }
+
+            return new { Id = onepNetwork.Id };
         }
 
         // PUT: api/OnepNetwork/5
