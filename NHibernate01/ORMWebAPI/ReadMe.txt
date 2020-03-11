@@ -194,7 +194,8 @@ Follow NHibernate 4.x Cookbook
 	Please go through this commit.
 	It involves two important things: 
 		(1) We disabled FK in OnepAmptp.hbm while defining 1-1 with TP using foreign-key="none"
-		btw, we also added unique="true" to TP .. And we may as well try fetch="join" in Amptp and/or TP to experiment with performance.
+			btw, we also added unique="true" to TP .. And we may as well try fetch="join" in Amptp and/or TP to experiment with performance.
+			Further, we could retain one-to-one in TP as well and then we can't use unique="true". And it works as well.
 		(2) While saving, we must save the TPs and AmpTPs first and then the network (see HttpPost on NetworksController)
 
 	Relevant exceptions to note:

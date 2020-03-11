@@ -8,10 +8,6 @@ alter table onep_terminationpoint  drop foreign key FK_47A14A86
 
 
     
-alter table onep_terminationpoint  drop foreign key FK_353543FA
-
-
-    
 alter table onep_topologicallink  drop foreign key FK_E6468C8D
 
 
@@ -67,7 +63,6 @@ alter table onep_fibertl  drop foreign key FK_D775C7F5
        name VARCHAR(255),
        notes VARCHAR(255),
        network INTEGER UNSIGNED,
-       OnepAmpRole INTEGER UNSIGNED unique,
        primary key (oid)
     )
 
@@ -101,12 +96,6 @@ alter table onep_fibertl  drop foreign key FK_D775C7F5
         add constraint FK_47A14A86 
         foreign key (network) 
         references onep_network (oid)
-
-    alter table onep_terminationpoint 
-        add index (OnepAmpRole), 
-        add constraint FK_353543FA 
-        foreign key (OnepAmpRole) 
-        references onep_amptp (oid)
 
     alter table onep_topologicallink 
         add index (uniMate), 
