@@ -5,14 +5,12 @@
 
   <class name = "OnepAmptp" lazy="true" table="onep_amptp" >
     <id name="Id" column="oid">
-      <generator class="foreign">
-        <!--copies the Id in a one-to-one rel-->
-        <param name="property">OnepTerminationpoint</param>
-      </generator>
+      <generator class="hilo" />
     </id>
     
     <property name="TargetGain" column="targetGain" />
-    <one-to-one name="OnepTerminationpoint" class="OnepTerminationpoint" constrained="true" foreign-key="none"/>
+    <one-to-one name="OnepTerminationpoint" class="OnepTerminationpoint" foreign-key="none" property-ref="OnepAmpRole"/>
+
     <many-to-one name="OnepNetwork" column="network" class="OnepNetwork" />
   </class>
 

@@ -120,7 +120,9 @@ namespace ORMWebAPI.Controllers
             {
                 var onepNetwork = _session.Get<OnepNetwork>(id);
                 tx.Commit();
-                return onepNetwork;
+                Debug.WriteLine(ReferenceEquals(onepNetwork.OnepTerminationpoints[0].OnepAmpRole, onepNetwork.OnepAmptps[0]));
+                Debug.WriteLine($"{onepNetwork.OnepTerminationpoints[0].Id}, {onepNetwork.OnepAmptps[0].Id}");
+                return null;
             }
         }
 
@@ -212,19 +214,27 @@ namespace ORMWebAPI.Controllers
 
             using (var tx = _session.BeginTransaction())
             {
-                //var table_name = "onep_amptp";
-                //int maxoid = 2;
-                //int count = 2;
-                //foreach (var amptp in onepNetwork.OnepAmptps)
-                //{
-                //    _session.CreateSQLQuery($"insert into {table_name}  (oid) select oid + {maxoid} from onep_insertoid where oid <= {count}").ExecuteUpdate();
-                //}
-                _session.Save(onepNetwork.OnepTerminationpoints[0]);
-                _session.Save(onepNetwork.OnepTerminationpoints[1]);
-                _session.Save(onepNetwork.OnepAmptps[0]);
-                _session.Save(onepNetwork.OnepAmptps[1]);
-                _session.Save(onepNetwork);
-                tx.Commit();
+                try
+                {
+                    //var table_name = "onep_amptp";
+                    //int maxoid = 2;
+                    //int count = 2;
+                    //foreach (var amptp in onepNetwork.OnepAmptps)
+                    //{
+                    //    _session.CreateSQLQuery($"insert into {table_name}  (oid) select oid + {maxoid} from onep_insertoid where oid <= {count}").ExecuteUpdate();
+                    //}
+                    //_session.Save(onepNetwork.OnepTerminationpoints[0]);
+                    //_session.Save(onepNetwork.OnepTerminationpoints[1]);
+                    //_session.Save(onepNetwork.OnepAmptps[0]);
+                    //_session.Save(onepNetwork.OnepAmptps[1]);
+                    _session.Save(onepNetwork);
+                    tx.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.ToString());
+                    tx.Rollback();
+                }
             }
 
             return new { Id = onepNetwork.Id };

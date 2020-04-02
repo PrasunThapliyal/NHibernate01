@@ -36,6 +36,15 @@ namespace ORM_NHibernate.BusinessObjects
 			sb.Append(_targetGain);
 			return sb.ToString();
 		}
+
+		//public override string BusinessSignature()
+		//{
+		//	System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+		//	sb.Append(this.GetType().FullName);
+		//	sb.Append(_targetGain);
+		//	return sb.ToString();
+		//}
 		#endregion
 
 		#region Properties

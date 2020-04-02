@@ -15,6 +15,14 @@ namespace ORM_NHibernate.BusinessObjects
             return String.Format("TP {0}", this.Name);
         }
 
+        public override string NaturalName
+        {
+            get
+            {
+                return this.Name;
+            }
+        }
+
         public virtual OnepAmptp OnepAmpRole { get => _onepAmp; set => _onepAmp = value; }
     }
 }

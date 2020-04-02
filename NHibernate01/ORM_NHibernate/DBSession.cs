@@ -54,7 +54,7 @@ namespace ORM_NHibernate
 
 
                 var schemaExport = new NHibernate.Tool.hbm2ddl.SchemaExport(cfg);
-                schemaExport.SetOutputFile(@"db.sql").Execute(useStdOut: true, execute: false, justDrop: false);
+                schemaExport.SetOutputFile(@"db.sql").Execute(useStdOut: true, execute: true, justDrop: false);
 
                 //// Example Schema Export
                 ///
@@ -130,12 +130,12 @@ namespace ORM_NHibernate
                         add column NewProp VARCHAR(255)
                  * 
                  * */
-                 //
-                 // However, it does not work as expected all the times, for eg, 
-                 // if I rename a column in HBM, it just adds a new column with new name
-                 // if I change the sql-type from VARCHAR(255) to VARCHAR(100), nothing is executed and the column type remains unchanged
-                 // So we will need manual scripts for migration
-                 //
+                //
+                // However, it does not work as expected all the times, for eg, 
+                // if I rename a column in HBM, it just adds a new column with new name
+                // if I change the sql-type from VARCHAR(255) to VARCHAR(100), nothing is executed and the column type remains unchanged
+                // So we will need manual scripts for migration
+                //
 
                 cfg.SetInterceptor(new AuditInterceptor());
             }
