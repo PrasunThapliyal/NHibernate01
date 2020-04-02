@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<hibernate-mapping xmlns = "urn:nhibernate-mapping-2.2"
+   assembly = "ORM_NHibernate" namespace = "ORM_NHibernate.BusinessObjects">
+
+  <class name = "OnepTopologicallink" table="onep_topologicallink" lazy="true" discriminator-value="1">
+    <id name = "Id" column="oid">
+      <generator class = "hilo"/>
+    </id>
+    
+    <discriminator column="Discriminator" type="int" not-null="false" length="2"/>
+
+    <property name="Name" column="name" />
+    <property name="Length" column="length" />
+
+    <many-to-one name="OnepTopologicallinkMemberByUniMate" column="uniMate" class="OnepTopologicallink" />
+    <many-to-one name="OnepTerminationpointByAEndTP" column="aEndTP" class="OnepTerminationpoint" />
+    <many-to-one name="OnepTerminationpointByZEndTP" column="zEndTP" class="OnepTerminationpoint" />
+    <many-to-one name="OnepNetwork" column="network" class="OnepNetwork" />
+
+    <subclass name="OnepFibertl" lazy="true" batch-size="100" discriminator-value="2" extends="OnepTopologicallink">
+      <join table="onep_fibertl" fetch="select">
+        <key column="oid" />
+        <property name="Loss" column="loss" />
+
+        <many-to-one name="OnepNetwork" column="network" class="OnepNetwork" />
+      </join>
+    </subclass>
+
+  </class>
+
+</hibernate-mapping>

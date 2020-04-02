@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ORM_NHibernate;
+using Newtonsoft.Json;
 
 namespace ORMWebAPI
 {
@@ -25,12 +26,19 @@ namespace ORMWebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+
+                // TODO : Newtonsoft.Json not working in .netcoreapp3.1 .. specifically ReferenceLoopHandling
+                //.AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+                //.AddNewtonsoftJson(options => { });
+                ;
 
             // NHibernate session registration
             // Note that we are registring SessionFactory as a Singleton
             // but session is registered per request
-            var nHibernateSessionFactory = new DBSession().GetSessionFactory();
+            var nHibernateConfiguration = new DBSession().GetConfiguration();
+            var nHibernateSessionFactory = new DBSession().GetSessionFactory(nHibernateConfiguration);
+            services.AddSingleton(nHibernateConfiguration);
             services.AddSingleton(nHibernateSessionFactory);
             services.AddScoped(factory => nHibernateSessionFactory.OpenSession());
         }
@@ -51,6 +59,7 @@ namespace ORMWebAPI
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

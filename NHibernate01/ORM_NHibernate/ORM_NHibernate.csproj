@@ -13,21 +13,20 @@
 
   <ItemGroup>
     <None Remove="Configuration\hibernate.cfg.xml" />
-    <None Remove="HBM\Student.hbm.xml" />
+    <None Remove="HBM\OnepAmptp.hbm.xml" />
+    <None Remove="HBM\OnepNetwork.hbm.xml" />
+    <None Remove="HBM\OnepTerminationpoint.hbm.xml" />
+    <None Remove="HBM\OnepTopologicallink.hbm.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Configuration\hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="HBM\Student.hbm.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="BusinessObjects\" />
+    <EmbeddedResource Include="HBM\OnepAmptp.hbm.xml" />
+    <EmbeddedResource Include="HBM\OnepNetwork.hbm.xml" />
+    <EmbeddedResource Include="HBM\OnepTerminationpoint.hbm.xml" />
+    <EmbeddedResource Include="HBM\OnepTopologicallink.hbm.xml" />
   </ItemGroup>
 
 </Project>

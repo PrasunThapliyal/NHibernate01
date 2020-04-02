@@ -127,7 +127,7 @@ NHibernate.EmptyInterceptor
 30 Oct 2019
 Try with MySQL
  - Add nuget MySql.Data
- - Create a new Database named 'nhibernate' in MySql workbench, and create a table named 'student'
+ - Create a new Database named 'nhibernate01' in MySql workbench, and create a table named 'student'
  - By default, the database/table/column names need to be in small case
  - Some modifications required in cfg and hbm file
  - id column was giving some problem. I'll try setting its class to 'hilo' to mimin 1P, and that requires me to create a new table in MySql
@@ -146,3 +146,60 @@ Try with MySQL
 
 	INSERT INTO hibernate_unique_key(next_hi) VALUES (0)
  - And cool .. we are able to insert/get using Postman
+-------------
+31 Oct 2019
+Troubleshooting
+(#) Column names which are SQL kywords
+	- In 1P, there are certain tables with column names that are SQL keywords, and the insert query that nHibernate issues fails.
+	Now, we could go about and rename all those columns, but you could add this setting to hibernate.cfg.xml
+	<property name="hbm2ddl.keywords">auto-quote</property>
+	What it would do is, instead of writing rank as column name, nH would write `rank` in the SQL query, and that is acceptable to SQL.
+	One caveat though, it probably works only if we have the mappings defined as .hbm.xml files (doesn't work with Fluent NH)
+	Anyways, we are using .hbm.xml files only, so this works for us
+04 Dec 2019
+Follow NHibernate 4.x Cookbook
+	Tried Mapping by code. Its easy but has limitations, such as not being able to specify SQL-Type, so we will not use this
+	Also tried exporting Schema to file and console .. works.
+	Class Hierarchies
+		Table per class (read Single table per class)
+			Requires <subclass extends>
+			Requires discriminator and natural id. NH creates an index on the natural id as well.
+			Not used in 1P, and is not really an option we want. For one, it doesn't allow not-null on subclass properties
+		Table per subclass
+			Creates a table for each sub class
+			Requires <joined-subclass>
+			Requires Key
+			is the way to go. We use this in 1P
+	Changed from Student class to Product class
+	Add Base class EntityBase
+	Add classes Product : EntityBase; Movie: Product; Book: Product
+	Add One-to-many relation from Movie to class ActorRole
+	Note: In 1-to-many relation, if Movie has 2 actors, NH fires 2 inserts for actors and then 2 updates for actors to update the FK
+		TODO: Could this be optimized so NH makes a single call to insert both the actors, and maybe likewise for the update call
+
+11 March 2020
+	OnePlanner's one-to-one mapping problem explained:
+	There is a 1-to-1 between Terminationpoint and Amptp, for eg
+	The way it is modeled, an Id (oid) gets assigned to TP, and we (i.e. NH) use the same oid in Amptp to mean that they are 1-1
+	Then when we try to save, AmpTP save requires TP to be saved first, but somehow NH does not handle this well, and we get this exception:
+	MySql.Data.MySqlClient.MySqlException: 'Cannot add or update a child row: a foreign key constraint fails (`nhibernate01`.`onep_amptp`, CONSTRAINT `FK_C4980009` FOREIGN KEY (`oid`) REFERENCES `onep_terminationpoint` (`oid`))'
+
+	Kai fixed this by inserting oids first, and something more around this.
+	I guess the intent is to get around the above exception. The insert oid only inserts the oid column and no other properties of TP.
+	That way, when we get to inserting Amptp, we dont excounter the FK exception.
+
+	Fix:
+	While I haven't understood Kai's fix completely, I've a different fix here.
+	ref: https://ayende.com/blog/3960/nhibernate-mapping-one-to-one
+	Please go through this commit.
+	It involves two important things: 
+		(1) We disabled FK in OnepAmptp.hbm while defining 1-1 with TP using foreign-key="none"
+			btw, we also added unique="true" to TP .. And we may as well try fetch="join" in Amptp and/or TP to experiment with performance.
+			Further, we could retain one-to-one in TP as well and then we can't use unique="true". And it works as well.
+		(2) While saving, we must save the TPs and AmpTPs first and then the network (see HttpPost on NetworksController)
+
+	Relevant exceptions to note:
+		(1) NHibernate.TransientObjectException: 'object references an unsaved transient instance - save the transient instance before flushing or set cascade action for the property to something that would make it autosave. Type: ORM_NHibernate.BusinessObjects.OnepTerminationpoint, Entity: TP TP 01'
+			This tells us that we must insert TP, AmpTP and then Network
+		(2) MySql.Data.MySqlClient.MySqlException: 'Cannot add or update a child row: a foreign key constraint fails (`nhibernate01`.`onep_amptp`, CONSTRAINT `FK_C4980009` FOREIGN KEY (`oid`) REFERENCES `onep_terminationpoint` (`oid`))'
+			Well, we resolved this by disabling FK
