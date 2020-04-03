@@ -1,7 +1,7 @@
 ﻿
 namespace ORM_NHibernate.BusinessObjects
 {
-    public partial class OnepAmptp : BusinessBase<uint>
+    public partial class OnepAmptp : BusinessBase<long>
     {
 		#region Declarations
 

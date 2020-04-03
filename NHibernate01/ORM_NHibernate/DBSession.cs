@@ -54,7 +54,7 @@ namespace ORM_NHibernate
 
 
                 var schemaExport = new NHibernate.Tool.hbm2ddl.SchemaExport(cfg);
-                schemaExport.SetOutputFile(@"db.sql").Execute(useStdOut: true, execute: true, justDrop: false);
+                schemaExport.SetOutputFile(@"db.Postgre.sql").Execute(useStdOut: true, execute: true, justDrop: false);
 
                 //// Example Schema Export
                 ///
