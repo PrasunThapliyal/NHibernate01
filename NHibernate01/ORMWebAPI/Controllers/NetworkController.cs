@@ -114,7 +114,7 @@ namespace ORMWebAPI.Controllers
 
         // GET: api/OnepNetwork/5
         [HttpGet("{id}", Name = "Get")]
-        public OnepNetwork Get(uint id)
+        public OnepNetwork Get(long id)
         {
             using (var tx = _session.BeginTransaction())
             {

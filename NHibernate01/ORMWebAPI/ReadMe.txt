@@ -203,3 +203,17 @@ Follow NHibernate 4.x Cookbook
 			This tells us that we must insert TP, AmpTP and then Network
 		(2) MySql.Data.MySqlClient.MySqlException: 'Cannot add or update a child row: a foreign key constraint fails (`nhibernate01`.`onep_amptp`, CONSTRAINT `FK_C4980009` FOREIGN KEY (`oid`) REFERENCES `onep_terminationpoint` (`oid`))'
 			Well, we resolved this by disabling FK
+
+03 April 2020
+=============
+PostgreSQL Integration
+	(#) Use Npgsql nuget package for connecting to server
+	(#) Change Configuration
+		driver_class = "NHibernate.Driver.NpgsqlDriver"
+		dialect = "NHibernate.Dialect.PostgreSQL83Dialect"
+		Connection String: "Host=localhost;Port=5432;Database=nHibernate01;Username=postgres;Password=password;"
+	(#) PostgreSQL83Dialect fixes a socket exception seen in PostgreSQLDialect. Even in PostgreSQLDialect, you could just skip the exception and things work good.
+	(#) uint is not supported, so I changed uint to long (data type for Id in BusinessBase)
+		Exception: System.ArgumentException: 'Dialect does not support DbType.UInt32 (Parameter 'typecode')'
+	(#) The equivalent for MySql Workbench is pgAdmin 4 - it opens in browser and sucks !!
+

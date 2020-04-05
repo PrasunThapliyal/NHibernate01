@@ -6,7 +6,7 @@ namespace ORM_NHibernate.BusinessObjects
 	using System.Text;
 
 
-	public partial class OnepNetwork: BusinessBase<uint>
+	public partial class OnepNetwork: BusinessBase<long>
     {
 		#region Declarations
 

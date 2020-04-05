@@ -3,7 +3,7 @@ namespace ORM_NHibernate.BusinessObjects
 {
 	using System.Collections.Generic;
 
-	public partial class OnepTopologicallink : BusinessBase<uint>
+	public partial class OnepTopologicallink : BusinessBase<long>
 	{
 		#region Declarations
 

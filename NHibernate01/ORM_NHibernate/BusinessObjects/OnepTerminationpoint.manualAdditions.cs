@@ -2,7 +2,7 @@
 
 namespace ORM_NHibernate.BusinessObjects
 {
-    public partial class OnepTerminationpoint : BusinessBase<uint>
+    public partial class OnepTerminationpoint : BusinessBase<long>
     {
         private OnepAmptp _onepAmp = null;
 

@@ -3,7 +3,7 @@ namespace ORM_NHibernate.BusinessObjects
 {
 	using System.Collections.Generic;
 
-	public partial class OnepTerminationpoint : BusinessBase<uint>
+	public partial class OnepTerminationpoint : BusinessBase<long>
 	{
 		#region Declarations
 
