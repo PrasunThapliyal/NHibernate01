@@ -5,8 +5,10 @@ namespace ORMWebAPI.Controllers
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Threading.Tasks;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+    using NHibernate;
     using ORM_NHibernate;
     using ORM_NHibernate.BusinessObjects;
 
@@ -16,10 +18,14 @@ namespace ORMWebAPI.Controllers
     public class NetworkController : ControllerBase
     {
         private readonly NHibernate.ISession _session;
+        private readonly ISessionFactory _sessionFactory;
 
-        public NetworkController(NHibernate.ISession session)
+        public NetworkController(
+            NHibernate.ISession session,
+            NHibernate.ISessionFactory sessionFactory)
         {
             _session = session ?? throw new ArgumentNullException(nameof(session));
+            _sessionFactory = sessionFactory ?? throw new ArgumentNullException(nameof(sessionFactory));
         }
 
         // GET: api/OnepNetwork
@@ -128,7 +134,7 @@ namespace ORMWebAPI.Controllers
 
         // POST: api/OnepNetwork
         [HttpPost]
-        public object Post()
+        public async Task<object> Post()
         {
             OnepNetwork onepNetwork = null;
             {
@@ -189,7 +195,7 @@ namespace ORMWebAPI.Controllers
 
                 var onepAmpTP1 = new OnepAmptp()
                 {
-                    TargetGain = 2.0,
+                    TargetGain = 2.1,
                     OnepNetwork = onepNetwork,
                     OnepTerminationpoint = onepTP1
                 };
@@ -198,7 +204,7 @@ namespace ORMWebAPI.Controllers
 
                 var onepAmpTP2 = new OnepAmptp()
                 {
-                    TargetGain = 2.0,
+                    TargetGain = 1.9,
                     OnepNetwork = onepNetwork,
                     OnepTerminationpoint = onepTP2
                 };
@@ -216,24 +222,85 @@ namespace ORMWebAPI.Controllers
             {
                 try
                 {
-                    //var table_name = "onep_amptp";
-                    //int maxoid = 2;
-                    //int count = 2;
-                    //foreach (var amptp in onepNetwork.OnepAmptps)
-                    //{
-                    //    _session.CreateSQLQuery($"insert into {table_name}  (oid) select oid + {maxoid} from onep_insertoid where oid <= {count}").ExecuteUpdate();
-                    //}
-                    //_session.Save(onepNetwork.OnepTerminationpoints[0]);
-                    //_session.Save(onepNetwork.OnepTerminationpoints[1]);
-                    //_session.Save(onepNetwork.OnepAmptps[0]);
-                    //_session.Save(onepNetwork.OnepAmptps[1]);
-                    _session.Save(onepNetwork);
+                    await _session.SaveOrUpdateAsync(onepNetwork).ConfigureAwait(false);
                     tx.Commit();
                 }
                 catch (Exception ex)
                 {
+                    Debugger.Break();
+
                     Debug.WriteLine(ex.ToString());
                     tx.Rollback();
+                    throw;
+                }
+            }
+
+            // Simulate LE Run
+            Debugger.Break();
+            _session.Close();
+            var session2 = _sessionFactory.OpenSession();
+            var onepNetwork_x = session2.Get<OnepNetwork>(onepNetwork.Id);
+
+            // Apply object Updates
+            // Replace TP01 by new TP03, but move the same AmpRole object to TP03
+            {
+                var onepTP3 = new OnepTerminationpoint()
+                {
+                    Name = "TP 03",
+                    Ptp = 1,
+                    Role = 2,
+                    OnepNetwork = onepNetwork_x
+                };
+
+                var onepTP1 = onepNetwork_x.OnepTerminationpoints.Where(p => p.Name == "TP 01").FirstOrDefault();
+                onepNetwork_x.OnepTerminationpoints.Remove(onepTP1);
+                onepNetwork_x.OnepTerminationpoints.Add(onepTP3);
+                var onepFiberTL1 = onepNetwork_x.OnepFibertls.Where(p => p.Name == "FS01_1").FirstOrDefault();
+                var onepFiberTL2 = onepNetwork_x.OnepFibertls.Where(p => p.Name == "FS01_2").FirstOrDefault();
+                onepFiberTL1.OnepTerminationpointByAEndTP = null;
+                onepFiberTL2.OnepTerminationpointByZEndTP = null;
+
+                onepTP3.OnepTopologicallinksForAEndTP.Add(onepFiberTL1);
+                onepTP3.OnepTopologicallinksForZEndTP.Add(onepFiberTL2);
+                onepFiberTL1.OnepTerminationpointByAEndTP = onepTP3;
+                onepFiberTL2.OnepTerminationpointByZEndTP = onepTP3;
+
+                var onepAmpTP1 = onepTP1.OnepAmpRole;
+                onepTP3.OnepAmpRole = onepAmpTP1;
+
+                //onepTP1.OnepAmpRole = null; // This is not required
+                //onepTP1.OnepNetwork = null;
+                //onepTP1.OnepTopologicallinksForAEndTP.Clear();
+                onepTP1.OnepTopologicallinksForAEndTP = null; // These are required, otherwise we get an exception "deleted entity will be resaved"
+                //onepTP1.OnepTopologicallinksForZEndTP.Clear();
+                onepTP1.OnepTopologicallinksForZEndTP = null; // These are required, otherwise we get an exception "deleted entity will be resaved"
+            }
+
+
+            //{
+            //    var onepTP1 = onepNetwork_x.OnepTerminationpoints.Where(p => p.Name == "TP 01").FirstOrDefault();
+
+            //    onepNetwork_x.OnepTerminationpoints.Remove(onepTP1);
+            //    var amptp = onepTP1.OnepAmpRole;
+            //    onepNetwork_x.OnepAmptps.Remove(amptp);
+            //}
+            Debugger.Break();
+            session2.Close();
+            var session3 = _sessionFactory.OpenSession();
+            using (var tx = session3.BeginTransaction())
+            {
+                try
+                {
+                    await session3.SaveOrUpdateAsync(onepNetwork_x).ConfigureAwait(false);
+                    tx.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Debugger.Break();
+
+                    Debug.WriteLine(ex.ToString());
+                    tx.Rollback();
+                    throw;
                 }
             }
 
@@ -248,7 +315,7 @@ namespace ORMWebAPI.Controllers
 
         // DELETE: api/OnepNetwork/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(long id)
         {
             using (var tx = _session.BeginTransaction())
             {
