@@ -31,7 +31,7 @@
        name varchar(255),
        notes varchar(255),
        network int8,
-       OnepAmpRole int8 unique,
+       OnepAmpRole int8,
        primary key (oid)
     )
 

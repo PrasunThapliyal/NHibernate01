@@ -217,3 +217,10 @@ PostgreSQL Integration
 		Exception: System.ArgumentException: 'Dialect does not support DbType.UInt32 (Parameter 'typecode')'
 	(#) The equivalent for MySql Workbench is pgAdmin 4 - it opens in browser and sucks !!
 
+09 Apr 2020
+===========
+Fix the Delete issue
+	Problem: session.SaveOrUpdate() doesnt delete entities deleted under OnepNetwork.
+		For eg, if I remove TP01, it doesnt get removed from DB when I call session.SaveOrUpdate()
+	Fix: All bags must have cascade="all-delete-orphan". I earlier had "all"
+		Also, every collection under the TP being deleted should be set to null
